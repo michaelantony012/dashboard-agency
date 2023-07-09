@@ -20,7 +20,9 @@ class AuthController extends Controller
             'password'=>'required'
         ]);
 
-        $validated = Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_admin' => 1]);
+        $remember_me = $request->remember? true : false;
+
+        $validated = Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_admin' => 1], $remember_me);
 
         if($validated)
         {
