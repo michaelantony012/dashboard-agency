@@ -25,6 +25,21 @@
   <link rel="stylesheet" href="{{ asset('admin-assets/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('admin-assets/plugins/summernote/summernote-bs4.min.css')}}">
+
+  {{-- Datatable --}}
+  {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> --}}
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-assets/dist/css/adminlte.min.css?v=3.2.0') }}">
+
+  {{-- Date Picker --}}
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/daterangepicker/daterangepicker.css')}}">
+
+  {{-- Select2 --}}
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('admin-assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -128,5 +143,33 @@
 {{-- <script src="{{ asset('admin-assets/dist/js/demo.js')}}"></script> --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('admin-assets/dist/js/pages/dashboard.js')}}"></script>
+
+{{-- Datatable --}}
+{{-- <script src="{{ asset('admin-assets/plugins/jquery/jquery.min.js')}}"></script> --}}
+{{-- <script src="{{ asset('admin-assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script> --}}
+<script src="{{ asset('admin-assets/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/pdfmake/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+{{-- <script src="{{ asset('admin-assets/dist/js/adminlte.min.js?v=3.2.0')}}"></script> --}}
+{{-- <script src="{{ asset('admin-assets/dist/js/demo.js')}}"></script> --}}
+
+{{-- Date Picker --}}
+<script src="{{ asset('admin-assets/plugins/daterangepicker/daterangepicker.js')}}"></script>
+
+{{-- Select2 --}}
+<script src="{{ asset('admin-assets/plugins/select2/js/select2.full.min.js')}}"></script>
+
+{{-- Custom file input --}}
+<script src="{{ asset('admin-assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+
 </body>
 </html>

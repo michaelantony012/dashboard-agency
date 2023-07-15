@@ -8,12 +8,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">Users</h1>
+        <h1 class="m-0">Report</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Users</li>
+            <li class="breadcrumb-item active">Report</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -36,7 +36,7 @@
                 <div class="card-header">
                     {{-- <h3 class="card-title">User Index</h3> --}}
                 <button class="edit-modal btn btn-info"
-                onclick="window.location='{{ url('/6462/75726974') }}'">
+                onclick="window.location='{{ url('/6462/75727974') }}'">
                     <span class="glyphicon glyphicon-edit"></span> Create
                 </button>
                 </div>
@@ -45,26 +45,32 @@
                     <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Access Level</th>
+                        <th>Code</th>
+                        <th>Week</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Agency</th>
+                        <th>Platform</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                         @foreach($data as $item)
                             <tr>
-                                <td>{{$item->name}}</td>
-                                <td>{{$item->email}}</td>
-                                <td>{{$item->level_access}}</td>
+                                <td>{{$item->report_code}}</td>
+                                <td>{{$item->report_week}}</td>
+                                <td>{{$item->report_startdate}}</td>
+                                <td>{{$item->report_enddate}}</td>
+                                <td>{{$item->agency_name}}</td>
+                                <td>{{$item->platform_name}}</td>
                                 <td>
                                     <button class="edit-modal btn btn-info"
-                                    onclick="window.location='{{ url('/6462/'.$item->id.'/75726972') }}'"
+                                    onclick="window.location='{{ url('/6462/'.$item->id.'/75727972') }}'"
                                         data-info="{{$item->id}},{{$item->name}},{{$item->email}},{{$item->level_access}}">
                                         <span class="glyphicon glyphicon-edit"></span> Edit
                                     </button>
                                     <button class="delete-modal btn btn-danger"
-                                    onclick="window.location='{{ url('/6462/'.$item->id.'/75726976') }}'"
+                                    onclick="window.location='{{ url('/6462/'.$item->id.'/75727976') }}'"
                                         data-info="{{$item->id}},{{$item->name}},{{$item->email}},{{$item->level_access}}">
                                         <span class="glyphicon glyphicon-trash"></span> Delete
                                     </button>
@@ -74,9 +80,12 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Access Level</th>
+                        <th>Code</th>
+                        <th>Week</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Agency</th>
+                        <th>Platform</th>
                         <th>Actions</th>
                     </tr>
                     </tfoot>
