@@ -10,7 +10,7 @@ use App\Models\User;
 
 class UserControllerTest extends Controller
 {
-    
+    /*
     public function importView(Request $request){
         return view('importFile');
     }
@@ -23,5 +23,5 @@ class UserControllerTest extends Controller
     public function exportUsers(Request $request){
         return Excel::download(new ExportUser, 'users.xlsx');
     }
-    
+    */
 }

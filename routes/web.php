@@ -16,7 +16,8 @@ use App\Http\Controllers\UserControllerTest;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('/6462/75726969/');
 });
 
 // Auth::routes();
@@ -74,7 +75,8 @@ Route::post('/6462/75726969/', [AuthController::class, 'postLogin'])->name('post
  * follow the publishing procedures until succedeed
  * run composer update again, it will downgrading the zipstream-php 3.1 to 2.2.6, because of php 7.4. And the export will be working. I have a screenshot on it
  */
-
+/*
 Route::get('/file-import',[UserControllerTest::class,'importView'])->name('import-view');
 Route::post('/import',[UserControllerTest::class,'import'])->name('import');
 Route::get('/export-users',[UserControllerTest::class,'exportUsers'])->name('export-users');
+*/
