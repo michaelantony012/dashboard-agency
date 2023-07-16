@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AuthController, ProfileController, UserController, ReportAgencyController};
+use App\Http\Controllers\Admin\{AuthController, ProfileController, UserController, ReportAgencyController, PlatformController, AgencyController};
 use App\Http\Controllers\UserControllerTest;
 
 /*
@@ -41,6 +41,22 @@ Route::group(['middleware' => ['admin_auth']], function(){
     Route::get('/6462/75727974', [ReportAgencyController::class, 'create'])->name('reportagency.create');
     Route::post('/6462/75727975', [ReportAgencyController::class, 'store'])->name('reportagency.store');
     Route::get('/6462/{id}/75727976', [ReportAgencyController::class, 'destroy'])->name('reportagency.destroy');
+
+    // Reports
+    Route::get('/6462/75728971/', [AgencyController::class, 'index'])->name('agency.index');
+    Route::get('/6462/{id}/75728972', [AgencyController::class, 'edit'])->name('agency.edit');
+    Route::post('/6462/75728973', [AgencyController::class, 'update'])->name('agency.update');
+    Route::get('/6462/75728974', [AgencyController::class, 'create'])->name('agency.create');
+    Route::post('/6462/75728975', [AgencyController::class, 'store'])->name('agency.store');
+    Route::get('/6462/{id}/75728976', [AgencyController::class, 'destroy'])->name('agency.destroy');
+
+    // Reports
+    Route::get('/6462/75729971/', [PlatformController::class, 'index'])->name('platform.index');
+    Route::get('/6462/{id}/75729972', [PlatformController::class, 'edit'])->name('platform.edit');
+    Route::post('/6462/75729973', [PlatformController::class, 'update'])->name('platform.update');
+    Route::get('/6462/75729974', [PlatformController::class, 'create'])->name('platform.create');
+    Route::post('/6462/75729975', [PlatformController::class, 'store'])->name('platform.store');
+    Route::get('/6462/{id}/75729976', [PlatformController::class, 'destroy'])->name('platform.destroy');
 
 });
 

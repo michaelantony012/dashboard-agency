@@ -8,12 +8,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">Report Agency</h1>
+        <h1 class="m-0">Agency</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Report Agency</li>
+            <li class="breadcrumb-item active">Agency</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -36,7 +36,7 @@
                 <div class="card-header">
                     {{-- <h3 class="card-title">User Index</h3> --}}
                 <button class="edit-modal btn btn-info"
-                onclick="window.location='{{ url('/6462/75727974') }}'">
+                onclick="window.location='{{ url('/6462/75728974') }}'">
                     <span class="glyphicon glyphicon-edit"></span> Create
                 </button>
                 </div>
@@ -46,32 +46,30 @@
                     <thead>
                     <tr>
                         <th>Code</th>
-                        <th>Week</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Agency</th>
-                        <th>Platform</th>
+                        <th>Name</th>
+                        <th>PIC Full Name</th>
+                        <th>Total Platform</th>
+                        <th>Total Host</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                         @foreach($data['data_modal'] as $item)
                             <tr>
-                                <td>{{$item['report_code']}}</td>
-                                <td>{{$item['report_week']}}</td>
-                                <td>{{$item['report_startdate']}}</td>
-                                <td>{{$item['report_enddate']}}</td>
+                                <td>{{$item['id']}}</td>
                                 <td>{{$item['agency_name']}}</td>
-                                <td>{{$item['platform_name']}}</td>
+                                <td>{{$item['pic_fullname']}}</td>
+                                <td>{{$item['total_host']}}</td>
+                                <td>{{$item['total_platform']}}</td>
                                 <td>
                                     <button class="edit-modal btn btn-info"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75727972') }}'"
-                                        data-info="{{$item['report_code']}},{{$item['report_week']}}">
+                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75728972') }}'"
+                                        data-info="{{$item['id']}},{{$item['agency_name']}}">
                                         <span class="glyphicon glyphicon-edit"></span> Edit
                                     </button>
                                     <button class="delete-modal btn btn-danger"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75727976') }}'"
-                                        data-info="{{$item['report_code']}},{{$item['report_week']}}">
+                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75728976') }}'"
+                                        data-info="{{$item['id']}},{{$item['agency_name']}}">
                                         <span class="glyphicon glyphicon-trash"></span> Delete
                                     </button>
                                 </td>
@@ -81,11 +79,10 @@
                     <tfoot>
                     <tr>
                         <th>Code</th>
-                        <th>Week</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Agency</th>
-                        <th>Platform</th>
+                        <th>Name</th>
+                        <th>PIC Full Name</th>
+                        <th>Total Platform</th>
+                        <th>Total Host</th>
                         <th>Actions</th>
                     </tr>
                     </tfoot>

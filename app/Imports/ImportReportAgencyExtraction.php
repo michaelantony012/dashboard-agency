@@ -14,7 +14,7 @@ class ImportReportAgencyExtraction implements ToModel
     */
     public function model(array $row)
     {
-        dd('import : '.$row[0]. ' '.$row[1]. ' '.$row[2]);
+        // dd('import : '.$row[0]. ' '.$row[1]. ' '.$row[2]);
 
         return new ReportAgencyExtraction([
             

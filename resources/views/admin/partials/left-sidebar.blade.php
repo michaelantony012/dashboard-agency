@@ -48,6 +48,22 @@
             </a>
             </li>
             <li class="nav-item">
+            <a href="{{ route('agency.index') }}" class="nav-link {{ $current_route=='agency.index'?'active':'' }}">
+                <i class="nav-icon fa fa-address-card"></i>
+                    <p>
+                    Agency
+                </p>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a href="{{ route('platform.index') }}" class="nav-link {{ $current_route=='platform.index'?'active':'' }}">
+                <i class="nav-icon fa fa-street-view"></i>
+                    <p>
+                    Platform
+                </p>
+            </a>
+            </li>
+            <li class="nav-item">
             <a href="{{ route('reportagency.index') }}" class="nav-link {{ $current_route=='reportagency.index'?'active':'' }}">
                 <i class="nav-icon fa fa-archive"></i>
                     <p>

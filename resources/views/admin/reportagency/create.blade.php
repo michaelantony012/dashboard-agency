@@ -8,11 +8,11 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">Create User</h1>
+        <h1 class="m-0">Create Report</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('reportagency.index') }}">Report Agency</a></li>
             <li class="breadcrumb-item active">Create Report</li>
         </ol>
         </div><!-- /.col -->
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="report_code">Report Code</label>
-                            <input type="text" class="form-control" id="report_code" placeholder="auto generated" name="report_code" required>
+                            <input type="text" class="form-control" id="report_code" placeholder="auto generated" name="report_code" readonly>
                         </div>
                         @error('report_code')
                             <div class="text-danger">{{ $message }}</div>
@@ -159,10 +159,6 @@
 <!-- jQuery -->
 <script src="{{ asset('admin-assets/plugins/jquery/jquery.min.js')}}"></script>
 
-<script>
-    $(function () {
-    });
-    </script>
 <script>
 $(function () {
     //Custom File Input
