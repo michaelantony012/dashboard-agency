@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Host extends Model
+class ReportExtraction extends Model
 {
     use HasFactory;
 
@@ -15,20 +15,11 @@ class Host extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'tb_host';
+    protected $table = 'tb_extraction';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-
-    public function agency(): BelongsTo
-    {
-        return $this->belongsTo(Agency::class);
-    }
-    public function platform(): BelongsTo
-    {
-        return $this->belongsTo(Platform::class);
-    }
 }

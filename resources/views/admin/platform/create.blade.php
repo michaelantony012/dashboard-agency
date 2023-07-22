@@ -34,12 +34,6 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col">
-                            <label for="id">Platform Code</label>
-                            <input type="text" class="form-control" id="id" placeholder="auto generated" name="id" readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col">
                             <label for="platform_name">Platform Name</label>
                             <input type="text" class="form-control" id="platform_name" placeholder="Enter Platform Name" name="platform_name" required>
                         </div>

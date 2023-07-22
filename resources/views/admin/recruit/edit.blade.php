@@ -8,12 +8,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">Create Agency</h1>
+        <h1 class="m-0">Edit Recruit</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('agency.index') }}"> Agency</a></li>
-            <li class="breadcrumb-item active">Create Agency</li>
+            <li class="breadcrumb-item"><a href="{{ route('recruit.index') }}">Agency</a></li>
+            <li class="breadcrumb-item active">Edit Recruit</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -29,54 +29,40 @@
             <div class="card-header">
             <h3 class="card-title">Fill Data</h3>
             </div>
-            <form method="POST" action="{{ route('agency.store') }}">
+            <form method="POST" action="{{ url('/6462/'.$id.'/75721073') }}">
                 @csrf
+                <div class="card-body">
+                    
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col">
                             <label for="agency_name">Agency Name</label>
-                            <input type="text" class="form-control" id="agency_name" placeholder="Agency Name" name="agency_name" required>
+                            <input type="text" class="form-control" id="agency_name" placeholder="Agency Name" name="agency_name" required value="{{ $agency_name }}" readonly>
                         </div>
                         @error('agency_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-group col">
-                            <label for="agency_bank">Agency Bank</label>
-                            <input type="text" class="form-control" id="agency_bank" placeholder="Agency Bank" name="agency_bank" required>
+                            <label for="platform_name">Platform Name</label>
+                            <input type="text" class="form-control" id="platform_name" placeholder="Platform Name" name="platform_name" required value="{{ $platform_name }}" readonly>
                         </div>
-                        @error('agency_bank')
+                        @error('platform_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label for="agency_bank_id">Agency Bank ID</label>
-                            <input type="text" class="form-control" id="agency_bank_id" placeholder="Agency Bank ID" name="agency_bank_id" required>
+                            <label for="recruit_status">Recruit Status</label>
+                            <select class="form-control select2" style="width: 100%;" name="recruit_status">=
+                                    <option value="1" @if ($recruit_status == 1)
+                                    selected
+                                @endif>Active</option>
+                                    <option value="0" @if ($recruit_status == 0)
+                                    selected
+                                @endif>InActive</option>=
+                            </select>
                         </div>
-                        @error('agency_bank_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div class="form-group col">
-                            <label for="pic_idcard">PIC ID Card</label>
-                            <input type="text" class="form-control" id="pic_idcard" placeholder="Enter ID Card PIC" name="pic_idcard" required>
-                        </div>
-                        @error('pic_idcard')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="row">
-                        <div class="form-group col">
-                            <label for="pic_fullname">PIC Full Name</label>
-                            <input type="text" class="form-control" id="pic_fullname" placeholder="Enter PIC Full Name" name="pic_fullname" required>
-                        </div>
-                        @error('pic_fullname')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div class="form-group col">
-                            <label for="pic_phone">PIC Phone Number</label>
-                            <input type="text" class="form-control" id="pic_phone" placeholder="Enter PIC Phone Number" name="pic_phone" required>
-                        </div>
-                        @error('pic_phone')
+                        @error('recruit_status')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -107,3 +93,15 @@
 </div>  
 @endsection
 
+<!-- jQuery -->
+<script src="{{ asset('admin-assets/plugins/jquery/jquery.min.js')}}"></script>
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+        theme: 'bootstrap4',
+            placeholder: "Please select"
+        });
+    })
+</script>

@@ -23,7 +23,15 @@
 @section('body')
 <!-- Main row -->
 <div class="row">
-    <div class="container-fluid">Dashboard</div>
+    <div class="col-12">
+        @if (session('error'))
+            <div class="text-danger text-center">{{ session('error') }}</div>
+        @endif
+        @if (session('success'))
+            <div class="text-success text-center">{{ session('success') }}</div>
+        @endif
+        {{-- <div class="container-fluid">Dashboard</div> --}}
+    </div>
 </div>
 <!-- /.row (main row) -->
 @endsection

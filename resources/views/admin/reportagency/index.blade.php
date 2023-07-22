@@ -46,11 +46,12 @@
                     <thead>
                     <tr>
                         <th>Code</th>
-                        <th>Week</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Agency</th>
-                        <th>Platform</th>
+                        <th>Type</th>
+                        <th style="width: 10px">W/M</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th style="width: 30px">Agency</th>
+                        <th style="width: 30px">Platform</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -58,32 +59,49 @@
                         @foreach($data['data_modal'] as $item)
                             <tr>
                                 <td>{{$item['report_code']}}</td>
-                                <td>{{$item['report_week']}}</td>
+                                <td>{{$item['report_period']}}</td>
+                                <td>{{$item['report_weekmonth']}}</td>
                                 <td>{{$item['report_startdate']}}</td>
                                 <td>{{$item['report_enddate']}}</td>
                                 <td>{{$item['agency_name']}}</td>
                                 <td>{{$item['platform_name']}}</td>
+                                @if (str_contains( auth()->user()->level_access, 'Admin'))
                                 <td>
                                     <button class="edit-modal btn btn-info"
                                     onclick="window.location='{{ url('/6462/'.$item['id'].'/75727972') }}'"
-                                        data-info="{{$item['report_code']}},{{$item['report_week']}}">
+                                        data-info="{{$item['report_code']}},{{$item['report_weekmonth']}}">
                                         <span class="glyphicon glyphicon-edit"></span> Edit
                                     </button>
-                                    <button class="delete-modal btn btn-danger"
+                                    {{-- <button class="delete-modal btn btn-danger"
                                     onclick="window.location='{{ url('/6462/'.$item['id'].'/75727976') }}'"
-                                        data-info="{{$item['report_code']}},{{$item['report_week']}}">
+                                        data-info="{{$item['report_code']}},{{$item['report_weekmonth']}}">
                                         <span class="glyphicon glyphicon-trash"></span> Delete
+                                    </button> --}}
+                                    
+                                    <button type="button" class="btn btn-danger button-delete" data-toggle="modal" data-target="#modal-danger" data-delete-link="{{ route('reportagency.destroy', $item['id']) }}">
+                                        Delete
                                     </button>
                                 </td>
+                                @endif
+                                @if (auth()->user()->level_access == "Agency")
+                                <td>
+                                    <button class="edit-modal btn btn-info"
+                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75727972') }}'"
+                                        data-info="{{$item['report_code']}},{{$item['report_weekmonth']}}">
+                                        <span class="glyphicon glyphicon-edit"></span> View
+                                    </button>
+                                </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                     <tr>
                         <th>Code</th>
-                        <th>Week</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Type</th>
+                        <th>W/M</th>
+                        <th>Start</th>
+                        <th>End</th>
                         <th>Agency</th>
                         <th>Platform</th>
                         <th>Actions</th>
@@ -98,6 +116,30 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
+
+        
+        <div class="modal fade" id="modal-danger">
+            <div class="modal-dialog">
+                <div class="modal-content bg-danger">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete?</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                        <form method="get" id="delete-button-confirm" action="">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-light">Yes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 @endsection
 
 <!-- jQuery -->
@@ -109,5 +151,10 @@
         "responsive": true, "lengthChange": false, "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+      $(".button-delete").on('click', function () {
+            // alert($(this).data('delete-link'));
+            $('#delete-button-confirm').attr('action', $(this).data('delete-link'));
+        });
     });
   </script>

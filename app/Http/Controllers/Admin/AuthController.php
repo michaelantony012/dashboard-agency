@@ -10,6 +10,10 @@ class AuthController extends Controller
 {
     public function getLogin()
     {
+        if(Auth::check())
+        {
+            return redirect()->route('dashboard')->with('success', 'Welcome Back '.Auth::user()->user_name);
+        }
         return view('admin.auth.login');
     }
 
@@ -22,7 +26,7 @@ class AuthController extends Controller
 
         $remember_me = $request->remember? true : false;
 
-        $validated = Auth::attempt(['email' => $request->email, 'password' => $request->password, 'level_access' => 'Admin'], $remember_me);
+        $validated = Auth::attempt(['email' => $request->email, 'password' => $request->password/*, 'level_access' => 'Admin'*/], $remember_me);
 
         if($validated)
         {

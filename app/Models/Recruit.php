@@ -5,17 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Host extends Model
+class Recruit extends Model
 {
-    use HasFactory;
-
-    /*
-    |--------------------------------------------------------------------------
-    | GLOBAL VARIABLES
-    |--------------------------------------------------------------------------
-    */
-
-    protected $table = 'tb_host';
+    protected $table = 'tb_recruit';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];

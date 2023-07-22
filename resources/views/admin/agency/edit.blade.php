@@ -29,16 +29,12 @@
             <div class="card-header">
             <h3 class="card-title">Fill Data</h3>
             </div>
-            <form method="POST" action="{{ url('/6462/75728975') }}">
+            <form method="POST" action="{{ url('/6462/'.$id.'/75728973') }}">
                 @csrf
                 <div class="card-body">
                     
                 <div class="card-body">
                     <div class="row">
-                        <div class="form-group col">
-                            <label for="agency_code">Agency Code</label>
-                            <input type="text" class="form-control" id="agency_code" placeholder="auto generated" name="agency_code" readonly value="{{ $id }}">
-                        </div>
                         <div class="form-group col">
                             <label for="agency_name">Agency Name</label>
                             <input type="text" class="form-control" id="agency_name" placeholder="Agency Name" name="agency_name" required value="{{ $agency_name }}">
@@ -46,8 +42,6 @@
                         @error('agency_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                    </div>
-                    <div class="row">
                         <div class="form-group col">
                             <label for="agency_bank">Agency Bank</label>
                             <input type="text" class="form-control" id="agency_bank" placeholder="Agency Bank" name="agency_bank" required value="{{ $agency_bank }}">
@@ -55,6 +49,8 @@
                         @error('agency_bank')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                    </div>
+                    <div class="row">
                         <div class="form-group col">
                             <label for="agency_bank_id">Agency Bank ID</label>
                             <input type="text" class="form-control" id="agency_bank_id" placeholder="Agency Bank ID" name="agency_bank_id" required value="{{ $agency_bank_id }}">
@@ -62,8 +58,6 @@
                         @error('agency_bank_id')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                    </div>
-                    <div class="row">
                         <div class="form-group col">
                             <label for="pic_idcard">PIC ID Card</label>
                             <input type="text" class="form-control" id="pic_idcard" placeholder="Enter ID Card PIC" name="pic_idcard" required value="{{ $pic_idcard }}">
@@ -71,6 +65,8 @@
                         @error('pic_idcard')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                    </div>
+                    <div class="row">
                         <div class="form-group col">
                             <label for="pic_fullname">PIC Full Name</label>
                             <input type="text" class="form-control" id="pic_fullname" placeholder="Enter PIC Full Name" name="pic_fullname" required value="{{ $pic_fullname }}">
@@ -78,9 +74,6 @@
                         @error('pic_fullname')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                    </div>
-                    <div class="row">
-                        
                         <div class="form-group col">
                             <label for="pic_phone">PIC Phone Number</label>
                             <input type="text" class="form-control" id="pic_phone" placeholder="Enter PIC Phone Number" name="pic_phone" required value="{{ $pic_phone }}">

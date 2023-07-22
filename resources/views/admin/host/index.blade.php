@@ -8,12 +8,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">Agency</h1>
+        <h1 class="m-0">Host</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Agency</li>
+            <li class="breadcrumb-item active">Host</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -35,23 +35,20 @@
                 <div class="card">
                 <div class="card-header">
                     {{-- <h3 class="card-title">User Index</h3> --}}
-                @if (str_contains( auth()->user()->level_access, 'Admin'))
                 <button class="edit-modal btn btn-info"
-                onclick="window.location='{{ url('/6462/75728974') }}'">
+                onclick="window.location='{{ url('/6462/75721174') }}'">
                     <span class="glyphicon glyphicon-edit"></span> Create
                 </button>
-                @endif
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                     <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>PIC Full Name</th>
-                        <th>Total Platform</th>
-                        <th>Total Host</th>
+                        <th>Host UID</th>
+                        <th>Host Name</th>
+                        <th>Platform Name</th>
+                        <th>Agency Name</th>
                         @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <th>Actions</th>
                         @endif
@@ -60,25 +57,23 @@
                     <tbody>
                         @foreach($data['data_modal'] as $item)
                             <tr>
-                                <td>{{$item['id']}}</td>
+                                <td>{{$item['host_uid']}}</td>
+                                <td>{{$item['host_name']}}</td>
+                                <td>{{$item['platform_name']}}</td>
                                 <td>{{$item['agency_name']}}</td>
-                                <td>{{$item['pic_fullname']}}</td>
-                                <td>{{$item['total_platform']}}</td>
-                                <td>{{$item['total_host']}}</td>
-                                
                                 @if (str_contains( auth()->user()->level_access, 'Admin'))
                                 <td>
                                     <button class="edit-modal btn btn-info"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75728972') }}'"
-                                        data-info="{{$item['id']}},{{$item['agency_name']}}">
+                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75721172') }}'"
+                                        data-info="{{$item['id']}},{{$item['host_uid']}}">
                                         <span class="glyphicon glyphicon-edit"></span> Edit
                                     </button>
                                     {{-- <button class="delete-modal btn btn-danger"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75728976') }}'"
-                                        data-info="{{$item['id']}},{{$item['agency_name']}}">
+                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75721176') }}'"
+                                        data-info="{{$item['id']}},{{$item['host_uid']}}">
                                         <span class="glyphicon glyphicon-trash"></span> Delete
                                     </button> --}}
-                                    <button type="button" class="btn btn-danger button-delete" data-toggle="modal" data-target="#modal-danger" data-delete-link="{{ route('agency.destroy', $item['id']) }}">
+                                    <button type="button" class="btn btn-danger button-delete" data-toggle="modal" data-target="#modal-danger" data-delete-link="{{ route('host.destroy', $item['id']) }}">
                                         Delete
                                     </button>
                                 </td>
@@ -88,11 +83,10 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>PIC Full Name</th>
-                        <th>Total Platform</th>
-                        <th>Total Host</th>
+                        <th>Host UID</th>
+                        <th>Host Name</th>
+                        <th>Platform Name</th>
+                        <th>Agency Name</th>
                         @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <th>Actions</th>
                         @endif

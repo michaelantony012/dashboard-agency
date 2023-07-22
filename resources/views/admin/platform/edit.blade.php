@@ -29,18 +29,9 @@
             <div class="card-header">
             <h3 class="card-title">Fill Data</h3>
             </div>
-            <form method="POST" action="{{ url('/6462/75728975') }}">
+            <form method="POST" action="{{ url('/6462/'.$id.'/75729973') }}">
                 @csrf
                 <div class="card-body">
-                    
-                <div class="card-body">
-                    
-                    <div class="row">
-                        <div class="form-group col">
-                            <label for="id">Platform Code</label>
-                            <input type="text" class="form-control" id="id" placeholder="auto generated" name="id" readonly value="{{ $id }}">
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="form-group col">
                             <label for="platform_name">Platform Name</label>
@@ -64,6 +55,11 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    {{-- <div class="row">
+                        <div class="form-group col">
+                            <input type="number" class="form-control" id="id" placeholder="ID" name="id" value="{{ $id }}" hidden>
+                        </div>
+                    </div> --}}
                     {{-- <div class="form-group">
                     <label for="exampleInputFile">File input</label>
                     <div class="input-group">

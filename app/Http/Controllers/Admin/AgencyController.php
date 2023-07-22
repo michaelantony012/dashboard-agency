@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Agency;
+use App\Models\Recruit;
+use App\Models\Platform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Agency;
+use App\Http\Controllers\Controller;
 
 class AgencyController extends Controller
 {
@@ -56,7 +58,7 @@ class AgencyController extends Controller
         ];
         return view('admin.agency.edit', $data);
     }
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         // dd('name: '.$request->name.', email: '.$request->email.', password: '.Hash::make($request->password));
         $result = json_encode($request);
@@ -72,7 +74,7 @@ class AgencyController extends Controller
             'pic_phone' => 'required'
         ]);
 
-        Agency::where('id', $request->id)
+        Agency::where('id', $id)
         ->update([
             'agency_name' => $request->agency_name,
             'agency_bank' => $request->agency_bank,
@@ -109,7 +111,7 @@ class AgencyController extends Controller
             'pic_phone' => 'required'
         ]);
 
-        Agency::create([
+        $create_agency = Agency::create([
             'agency_name' => $request->agency_name,
             'agency_bank' => $request->agency_bank,
             'agency_bank_id' => $request->agency_bank_id,
@@ -122,11 +124,26 @@ class AgencyController extends Controller
             
         ]);
 
+        // Auto Recruit
+        if($create_agency)
+        {
+            $platform = Platform::where('platform_status','=','1')->get();
+            foreach($platform as $plat)
+            {
+                Recruit::create([
+                    'platform_id' => $plat->id,
+                    'agency_id' => $create_agency->id,
+                    'recruit_status' => 0 // false
+                ]);
+            }
+        }
+        // End Auto Recruit
+
         return redirect()->route('agency.index')->with('success', 'Successfully Create New Agency');
     }
     public function destroy($id)
     {
-        // DB::delete('delete from agency where id = ?', [$id]);
+        DB::delete('delete from tb_agency where id = ?', [$id]);
 
         return redirect()->route('agency.index')->with('success', 'Successfully Delete Agency');
     }

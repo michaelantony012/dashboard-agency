@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Agency;
+use App\Models\Recruit;
+use App\Models\Platform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Platform;
+use App\Http\Controllers\Controller;
 
 class PlatformController extends Controller
 {
@@ -47,7 +49,7 @@ class PlatformController extends Controller
         ];
         return view('admin.platform.edit', $data);
     }
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         // dd('name: '.$request->name.', email: '.$request->email.', password: '.Hash::make($request->password));
         $result = json_encode($request);
@@ -57,8 +59,8 @@ class PlatformController extends Controller
             'platform_name' => 'required',
             'platform_status' => 'required',
         ]);
-        
-        Platform::where('id', $request->id)
+
+        Platform::where('id', '=', $request->id)
         ->update([
             'platform_name' => $request->platform_name,
             'platform_status' => $request->platform_status
@@ -86,7 +88,7 @@ class PlatformController extends Controller
             'platform_status' => 'required',
         ]);
 
-        Platform::create([
+        $create_platform = Platform::create([
             'platform_name' => $request->platform_name,
             'platform_status' => $request->platform_status
             // 'total_agency' => $modal->total_agency,
@@ -94,11 +96,26 @@ class PlatformController extends Controller
             
         ]);
 
+        // Auto Recruit
+        if($create_platform && $create_platform->platform_status==1)
+        {
+            $agency = Agency::get();
+            foreach($agency as $agent)
+            {
+                Recruit::create([
+                    'platform_id' => $create_platform->id,
+                    'agency_id' => $agent->id,
+                    'recruit_status' => 0 // false
+                ]);
+            }
+        }
+        // End Auto Recruit
+
         return redirect()->route('platform.index')->with('success', 'Successfully Create New Platform');
     }
     public function destroy($id)
     {
-        // DB::delete('delete from platform where id = ?', [$id]);
+        DB::delete('delete from tb_platform where id = ?', [$id]);
 
         return redirect()->route('platform.index')->with('success', 'Successfully Delete Platform');
     }

@@ -29,30 +29,72 @@
             <div class="card-header">
             <h3 class="card-title">Quick Example</h3>
             </div>
-            <form method="POST" action="{{ url('/6462/75726973') }}">
+            <form method="POST" action="{{ url('/6462/'.$id.'/75726973') }}">
                 @csrf
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="exampleInputName1">User Name</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name" value="{{ $name }}" required>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label for="exampleInputName1">User Name</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name" value="{{ $name }}" required>
+                        </div>
+                        @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-group col">
+                            <label for="exampleInputEmail1">User Email</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" name="email" value="{{ $email }}" required>
+                        </div>
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">User Email</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" name="email" value="{{ $email }}" required>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label for="exampleInputPassword1">Enter New Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter new password" name="password" required>
+                        </div>
+                        @error('password')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-group col">
+                            <label>Select Access Level for User (you can select more than 1)</label>
+                            <div class="select2-purple">
+                                <select class="select2" multiple="multiple" data-placeholder="" data-dropdown-css-class="select2-purple" style="width: 100%;" name="level_access[]" required>
+                                    <option @if (str_contains($level_access, 'Admin'))
+                                        selected                  
+                                    @endif>Admin</option>
+                                    <option @if (str_contains($level_access, 'Agency'))
+                                        selected            
+                                    @endif>Agency</option>
+                                </select>
+                            </div>
+                        </div>
+                        @error('level_access')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('email')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Enter New Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter new password" name="password" required>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label>Select Agency</label>
+                            @if (str_contains( auth()->user()->level_access, 'Admin'))
+                            <select class="form-control select2" style="width: 100%;" name="agency_id">
+                                <option></option>
+                                @foreach($agency as $agent)
+                                    <option value="{{ $agent['id'] }}" 
+                                        @if ($agency_id == $agent['id'])
+                                            selected
+                                        @endif
+                                    >{{ $agent['agency_name'] }}</option>
+                                @endforeach
+                            </select>
+                            @else
+                            <input type="text" class="form-control" id="agency_id" name="agency_id" value="{{ $agency_name }}" readonly>
+                            @endif
+                        </div>
+                        @error('agency_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('password')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
                     {{-- <div class="form-group">
                     <label for="exampleInputFile">File input</label>
                     <div class="input-group">
@@ -79,3 +121,16 @@
     </div>
 </div>  
 @endsection
+
+<!-- jQuery -->
+<script src="{{ asset('admin-assets/plugins/jquery/jquery.min.js')}}"></script>
+
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4',
+        placeholder: "Please select"
+        });
+    })
+</script>
