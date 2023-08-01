@@ -143,6 +143,9 @@ class AgencyController extends Controller
     }
     public function destroy($id)
     {
+        // Auto Delete Recruit
+        DB::delete('delete from tb_recruit where agency_id = ?', [$id]);
+        
         DB::delete('delete from tb_agency where id = ?', [$id]);
 
         return redirect()->route('agency.index')->with('success', 'Successfully Delete Agency');

@@ -35,14 +35,14 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="exampleInputName1">User Name</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name" required>
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Name" name="name" required>
                         </div>
                         @error('name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-group col">
                             <label for="exampleInputEmail1">User Email</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" name="email" required>
+                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="email" required>
                         </div>
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
@@ -50,14 +50,14 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label for="exampleInputPassword1">Enter New Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter new password" name="password" required>
+                            <label for="exampleInputPassword1">New Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="New password" name="password" required>
                         </div>
                         @error('password')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-group col">
-                            <label>Select Access Level for User (you can select more than 1)</label>
+                            <label>Access Level for User (you can select more than 1)</label>
                             <div class="select2-purple">
                                 <select class="select2" multiple="multiple" data-placeholder="" data-dropdown-css-class="select2-purple" style="width: 100%;" name="level_access[]" required>
                                     <option>Admin</option>
@@ -71,7 +71,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label>Select Agency</label>
+                            <label>Agency</label>
                             <select class="form-control select2" style="width: 100%;" name="agency_id">
                                 <option></option>
                                 @foreach($agency as $agent)

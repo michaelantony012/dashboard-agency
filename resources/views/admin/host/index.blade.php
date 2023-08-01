@@ -42,16 +42,16 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <table id="example1" class="table table-bordered table-striped">
+                    <table id="example" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Host UID</th>
-                        <th>Host Name</th>
-                        <th>Platform Name</th>
-                        <th>Agency Name</th>
+                        <th class="filter">Host UID</th>
+                        <th class="filter">Host Name</th>
+                        <th class="filter">Platform Name</th>
                         @if (str_contains( auth()->user()->level_access, 'Admin'))
-                        <th>Actions</th>
+                        <th class="filter">Agency Name</th>
                         @endif
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,24 +60,26 @@
                                 <td>{{$item['host_uid']}}</td>
                                 <td>{{$item['host_name']}}</td>
                                 <td>{{$item['platform_name']}}</td>
-                                <td>{{$item['agency_name']}}</td>
                                 @if (str_contains( auth()->user()->level_access, 'Admin'))
-                                <td>
-                                    <button class="edit-modal btn btn-info"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75721172') }}'"
-                                        data-info="{{$item['id']}},{{$item['host_uid']}}">
-                                        <span class="glyphicon glyphicon-edit"></span> Edit
-                                    </button>
-                                    {{-- <button class="delete-modal btn btn-danger"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75721176') }}'"
-                                        data-info="{{$item['id']}},{{$item['host_uid']}}">
-                                        <span class="glyphicon glyphicon-trash"></span> Delete
-                                    </button> --}}
-                                    <button type="button" class="btn btn-danger button-delete" data-toggle="modal" data-target="#modal-danger" data-delete-link="{{ route('host.destroy', $item['id']) }}">
-                                        Delete
-                                    </button>
-                                </td>
+                                <td>{{$item['agency_name']}}</td>
                                 @endif
+                                <td>
+                                    <div class = "btn-group">
+                                        <button class="edit-modal btn btn-info"
+                                        onclick="window.location='{{ url('/6462/'.$item['id'].'/75721172') }}'"
+                                            data-info="{{$item['id']}},{{$item['host_uid']}}">
+                                            <span class="glyphicon glyphicon-edit"></span> Edit
+                                        </button>
+                                        {{-- <button class="delete-modal btn btn-danger"
+                                        onclick="window.location='{{ url('/6462/'.$item['id'].'/75721176') }}'"
+                                            data-info="{{$item['id']}},{{$item['host_uid']}}">
+                                            <span class="glyphicon glyphicon-trash"></span> Delete
+                                        </button> --}}
+                                        <button type="button" class="btn btn-danger button-delete" data-toggle="modal" data-target="#modal-danger" data-delete-link="{{ route('host.destroy', $item['id']) }}">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -86,10 +88,10 @@
                         <th>Host UID</th>
                         <th>Host Name</th>
                         <th>Platform Name</th>
-                        <th>Agency Name</th>
                         @if (str_contains( auth()->user()->level_access, 'Admin'))
-                        <th>Actions</th>
+                        <th>Agency Name</th>
                         @endif
+                        <th></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -131,12 +133,71 @@
 
 <script>
     $(function () {
-      $("#example1").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        // Setup - add a text input to each footer cell
+        $('#example thead tr')
+            .clone(true)
+            .addClass('filters')
+            .appendTo('#example thead');
 
-      $(".button-delete").on('click', function () {
+        $("#example").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+
+            /*https://datatables.net/extensions/fixedheader/examples/options/columnFiltering.html*/
+            orderCellsTop: true,
+            fixedHeader: true,
+            initComplete: function () {
+                var api = this.api();
+    
+                // For each column
+                api
+                    .columns()
+                    .eq(0)
+                    .each(function (colIdx) {
+                        // Set the header cell to contain the input element
+                        var cell = $('.filters th.filter').eq(
+                            $(api.column(colIdx).header()).index()
+                        );
+                        var title = $(cell).text();
+                        $(cell).html('<input type="text" placeholder="' + title + '" />');
+    
+                        // On every keypress in this input
+                        $(
+                            'input',
+                            $('.filters th.filter').eq($(api.column(colIdx).header()).index())
+                        )
+                            .off('keyup change')
+                            .on('change', function (e) {
+                                // Get the search value
+                                $(this).attr('title', $(this).val());
+                                var regexr = '({search})'; //$(this).parents('th').find('select').val();
+    
+                                var cursorPosition = this.selectionStart;
+                                // Search the column for that value
+                                api
+                                    .column(colIdx)
+                                    .search(
+                                        this.value != ''
+                                            ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                            : '',
+                                        this.value != '',
+                                        this.value == ''
+                                    )
+                                    .draw();
+                            })
+                            .on('keyup', function (e) {
+                                e.stopPropagation();
+    
+                                $(this).trigger('change');
+                                $(this)
+                                    .focus()[0]
+                                    .setSelectionRange(cursorPosition, cursorPosition);
+                            });
+                    });
+            },
+        }).buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
+
+        $(".button-delete").on('click', function () {
             // alert($(this).data('delete-link'));
             $('#delete-button-confirm').attr('action', $(this).data('delete-link'));
         });

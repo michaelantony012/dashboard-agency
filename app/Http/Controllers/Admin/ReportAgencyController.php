@@ -21,11 +21,22 @@ class ReportAgencyController extends Controller
     
     public function index()
     {
-        $modal = DB::table('tb_report')
-        ->leftJoin('tb_platform', 'tb_report.platform_id', '=', 'tb_platform.id')
-        ->leftJoin('tb_agency', 'tb_report.agency_id', '=', 'tb_agency.id')
-        ->select('tb_report.id', 'tb_report.report_period', 'tb_report.report_code', 'tb_report.report_weekmonth', 'tb_report.report_startdate', 'tb_report.report_enddate', 'tb_platform.platform_name', 'tb_agency.agency_name')
-        ->get();
+        if (str_contains( auth()->user()->level_access, 'Admin'))
+        {
+            $modal = DB::table('tb_report')
+            ->leftJoin('tb_platform', 'tb_report.platform_id', '=', 'tb_platform.id')
+            ->leftJoin('tb_agency', 'tb_report.agency_id', '=', 'tb_agency.id')
+            ->select('tb_report.id', 'tb_report.report_period', 'tb_report.report_code', 'tb_report.report_weekmonth', 'tb_report.report_startdate', 'tb_report.report_enddate', 'tb_platform.platform_name', 'tb_agency.agency_name')
+            ->get();
+        } else
+        {
+            $modal = DB::table('tb_report')
+            ->leftJoin('tb_platform', 'tb_report.platform_id', '=', 'tb_platform.id')
+            ->leftJoin('tb_agency', 'tb_report.agency_id', '=', 'tb_agency.id')
+            ->select('tb_report.id', 'tb_report.report_period', 'tb_report.report_code', 'tb_report.report_weekmonth', 'tb_report.report_startdate', 'tb_report.report_enddate', 'tb_platform.platform_name', 'tb_agency.agency_name')
+            ->where('tb_report.agency_id', '=', auth()->user()->agency_id)
+            ->get();
+        }
         // dd($modasl);
         $data_modal = [];
         foreach(json_decode($modal, true) as $item)
@@ -153,7 +164,7 @@ class ReportAgencyController extends Controller
         // summary columns header
         $report_agency = ReportAgency::find($id);
         $count_host = DB::table('tb_extraction')->where('report_id', $id)->select('id')->count();
-        $sum_salary = DB::table('tb_extraction')->where('report_id', $id)->where('agency_id', $report_agency->agency_id)->sum('total_salary');
+        $sum_salary = DB::table('tb_extraction')->where('report_id', $id)->sum('total_salary');
         if($count_host>0)
         {
             ReportAgency::where('id', $id)->update(['total_paidhost' => $count_host]);
@@ -199,7 +210,7 @@ class ReportAgencyController extends Controller
         // dd($agency->id);
         // dd("0".$request->report_week);
         // dd(substr("0".$request->report_week, -2));
-        $report_code = substr("0".$request->report_startdate, 9,2).substr("0".$request->report_startdate, 4,2).(string)($request->report_period==1?"W":"M").substr("0".$request->report_weekmonth, -2).'/'.$platform->id.'/'.$agency->id;
+        $report_code = substr("0".$request->report_enddate, 9,2).substr("0".$request->report_enddate, 4,2).(string)($request->report_period==1?"W":"M").substr("0".$request->report_weekmonth, -2).'/'.$platform->id.'/'.$agency->id;
         // dd($report_code);
         $report = ReportAgency::create([
             'report_code' => $report_code,
@@ -228,7 +239,7 @@ class ReportAgencyController extends Controller
         $id = $report->id;
         $report_agency = ReportAgency::find($id);
         $count_host = DB::table('tb_extraction')->where('report_id', $id)->select('id')->count();
-        $sum_salary = DB::table('tb_extraction')->where('report_id', $id)->where('agency_id', $report_agency->agency_id)->sum('total_salary');
+        $sum_salary = DB::table('tb_extraction')->where('report_id', $id)->sum('total_salary');
         if($count_host>0)
         {
             ReportAgency::where('id', $id)->update(['total_paidhost' => $count_host]);

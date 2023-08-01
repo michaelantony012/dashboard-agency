@@ -52,8 +52,26 @@ class HostController extends Controller
     public function edit($id)
     {
         $modal = Host::where('id', $id)->first();
-        $agency = Agency::all();
-        $platform = Platform::where('platform_status', '=', '1')->get();
+
+        if (str_contains( auth()->user()->level_access, 'Admin'))
+        {
+            $agency = Agency::all();
+        }else {
+            $agency = Agency::where('id', auth()->user()->agency_id)->get();
+        }
+        // dd($agency);
+        // $platform = Platform::where('platform_status', '=', '1')->get();
+        
+        // // Select Agency first -> Shows PLatform based on Recruit (agency_id) where recruit_status=1
+        $platform = DB::table('tb_recruit')
+        ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
+        ->where('tb_recruit.recruit_status', '=', 1)
+        ->where('tb_recruit.agency_id', '=', $modal->agency_id)
+        ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
+        ->get();
+
+        // dd(json_decode(json_encode($platform), true));
+
         // dd($modal);
         $data = [
             'title' => 'Edit Host',
@@ -63,7 +81,7 @@ class HostController extends Controller
             'platform_id' => $modal->platform_id,
             'agency_id' => $modal->agency_id,
             'agency' => $agency,
-            'platform' => $platform
+            'platform' => json_decode(json_encode($platform), true)
             // 'total_agency' => $modal->total_agency,
             // 'total_host' => $modal->total_host
         ];
@@ -112,14 +130,21 @@ class HostController extends Controller
         if (str_contains( auth()->user()->level_access, 'Admin'))
         {
             $agency = Agency::all();
+            $platform = [];
         } else {
             $agency = Agency::where('id',auth()->user()->agency_id)->get();
+            $platform = DB::table('tb_recruit')
+            ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
+            ->where('tb_recruit.recruit_status', '=', 1)
+            ->where('tb_recruit.agency_id', '=', auth()->user()->agency_id)
+            ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
+            ->get();
         }
-        $platform = Platform::where('platform_status', '=', '1')->get();
+        // $platform = Platform::where('platform_status', '=', '1')->get();
         $data = [
             'title' => 'Create Host',
             'agency' => $agency,
-            'platform' => $platform,
+            'platform' => json_decode(json_encode($platform), true),
             'auth_agency_id' => auth()->user()->agency_id
         ];
         return view('admin.host.create', $data);
@@ -180,5 +205,19 @@ class HostController extends Controller
         DB::delete('delete from tb_host where id = ?', [$id]);
 
         return redirect()->route('host.index')->with('success', 'Successfully Delete Host');
+    }
+
+    public function fetchAgencyOptions(Request $request)
+    {
+        // // Select Agency first -> Shows PLatform based on Recruit (agency_id) where recruit_status=1
+        // Implement your logic to fetch the filtered content options based on the $filterValue
+        $filteredOptions = DB::table('tb_recruit')
+        ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
+        ->where('tb_recruit.recruit_status', '=', 1)
+        ->where('tb_recruit.agency_id', '=', $request->agency_id)
+        ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
+        ->get();
+
+        return response()->json($filteredOptions);
     }
 }

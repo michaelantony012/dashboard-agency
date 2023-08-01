@@ -120,9 +120,9 @@
                         @error('report_enddate')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                        @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <div class="form-group col">
-                            <label>Select Agency</label>
-                            @if (str_contains( auth()->user()->level_access, 'Admin'))
+                            <label>Agency</label>
                             <select class="form-control select2" style="width: 100%;" name="agency_id">
                                 <option></option>
                                 @foreach($agency as $agent)
@@ -133,17 +133,15 @@
                                     >{{ $agent['agency_name'] }}</option>
                                 @endforeach
                             </select>
-                            @else
-                            <input type="text" class="form-control" id="agency_id" name="agency_id" value="{{ $agency_name }}" readonly>
-                            @endif
                         </div>
                         @error('agency_id')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
+                        @endif
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label for="percentage_share">Enter Percentage Share</label>
+                            <label for="percentage_share">Percentage Share</label>
                             <input type="number" class="form-control" id="percentage_share" placeholder="Percentage Share" name="percentage_share" step=".01" required value="{{ $percentage_share }}"
                             @if (!str_contains( auth()->user()->level_access, 'Admin'))
                                 readonly
@@ -225,16 +223,16 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 15px">#Report ID</th>
-                            <th style="width: 10px">#ID</th>
+                            {{-- <th style="width: 15px">#Report ID</th>
+                            <th style="width: 10px">#ID</th> --}}
                             <th>Report Order</th>
-                            <th>Report Code</th>
+                            {{-- <th>Report Code</th>
                             <th>Platform Name</th>
                             <th>>Status</th>
                             <th>Agency Name</th>
-                            <th>>Status</th>
+                            <th>>Status</th> --}}
                             <th>Host UID</th>
-                            <th>>Status</th>
+                            {{-- <th>>Status</th> --}}
                             <th>Total Salary</th>
                             {{-- <th style="width: 40px">Label</th> --}}
                         </tr>
@@ -242,16 +240,16 @@
                     <tbody>
                     @foreach($extraction as $ext)
                     <tr>
-                        <td>{{ $ext['report_id'] }}</td>
-                        <td>{{ $ext['id'] }}</td>
-                        <td style="width: 20px">{{ $ext['report_order'] }}</td>
-                        <td>{{ $ext['report_code'] }}</td>
+                        {{-- <td>{{ $ext['report_id'] }}</td>
+                        <td>{{ $ext['id'] }}</td> --}}
+                        <td style="width: 200px">{{ $ext['report_order'] }}</td>
+                        {{-- <td>{{ $ext['report_code'] }}</td>
                         <td>{{ $ext['platform_name'] }}</td>
                         <td>{{ $ext['platform_found_status'] }}</td>
                         <td>{{ $ext['agency_name'] }}</td>
-                        <td>{{ $ext['agency_found_status'] }}</td>
+                        <td>{{ $ext['agency_found_status'] }}</td> --}}
                         <td>{{ $ext['host_uid'] }}</td>
-                        <td>{{ $ext['host_found_status'] }}</td>
+                        {{-- <td>{{ $ext['host_found_status'] }}</td> --}}
                         <td>{{ number_format($ext['total_salary'],2) }}</td>
                     </tr>
                     @endforeach
@@ -347,11 +345,34 @@
                 // Update the report_weekmonth field
                 const reportPeriod = $('#report_period').val();
                 if (reportPeriod === '1') {
-                    // Calculate the week of the month based on the endDate
-                    const firstDayOfMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
-                    const daysOffset = firstDayOfMonth.getDay() === 0 ? 1 : 0;
-                    const weekOfMonth = Math.ceil((endDate.getDate() + daysOffset) / 7);
+                    // // Calculate the week of the month based on the endDate
+                    // const firstDayOfMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+                    // const daysOffset = firstDayOfMonth.getDay() === 0 ? 1 : 0;
+                    // const weekOfMonth = Math.ceil((endDate.getDate() + daysOffset) / 7);
+                    // $('#report_weekmonth').val(weekOfMonth);
+
+                    const weekOfMonth = 0;
+                    const monthOfStartDate = startDate.getMonth();
+                    const monthOfEndDate = endDate.getMonth();
+                    const dateOfStartDate = startDate.getDate();
+                    const dateOfEndDate = endDate.getDate();
+                    if(monthOfStartDate == monthOfEndDate)
+                    {
+                        weekOfMonth = Math.ceil(dateOfStartDate/7);
+                    }
+                    else
+                    {
+                        if(dateOfEndDate>=4 && dateOfEndDate<=7)
+                        {
+                            weekOfMonth = 1;
+                        }
+                        else
+                        {
+                            weekOfMonth = Math.ceil(dateOfStartDate/7);
+                        }
+                    }
                     $('#report_weekmonth').val(weekOfMonth);
+
                 } else {
                     // Set the month of the year based on the endDate
                     $('#report_weekmonth').val(endDate.getMonth() + 1);

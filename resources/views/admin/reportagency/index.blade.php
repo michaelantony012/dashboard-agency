@@ -35,10 +35,12 @@
                 <div class="card">
                 <div class="card-header">
                     {{-- <h3 class="card-title">User Index</h3> --}}
+                @if (str_contains( auth()->user()->level_access, 'Admin'))
                 <button class="edit-modal btn btn-info"
                 onclick="window.location='{{ url('/6462/75727974') }}'">
                     <span class="glyphicon glyphicon-edit"></span> Create
                 </button>
+                @endif
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -50,7 +52,9 @@
                         <th style="width: 10px">W/M</th>
                         <th>Start</th>
                         <th>End</th>
+                        @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <th style="width: 30px">Agency</th>
+                        @endif
                         <th style="width: 30px">Platform</th>
                         <th>Actions</th>
                     </tr>
@@ -63,7 +67,9 @@
                                 <td>{{$item['report_weekmonth']}}</td>
                                 <td>{{$item['report_startdate']}}</td>
                                 <td>{{$item['report_enddate']}}</td>
+                                @if (str_contains( auth()->user()->level_access, 'Admin'))
                                 <td>{{$item['agency_name']}}</td>
+                                @endif
                                 <td>{{$item['platform_name']}}</td>
                                 @if (str_contains( auth()->user()->level_access, 'Admin'))
                                 <td>
@@ -102,7 +108,9 @@
                         <th>W/M</th>
                         <th>Start</th>
                         <th>End</th>
+                        @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <th>Agency</th>
+                        @endif
                         <th>Platform</th>
                         <th>Actions</th>
                     </tr>

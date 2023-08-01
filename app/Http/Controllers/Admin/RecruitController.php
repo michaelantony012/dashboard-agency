@@ -23,7 +23,9 @@ class RecruitController extends Controller
         {
             $subarray=[];
             $subarray['id'] = $item['id'];
-            $subarray['recruit_status'] = $item['recruit_status']==1?"Active" : "Inactive";
+            $subarray['recruit_status_name'] = $item['recruit_status']==1?"Active" : "Inactive";
+            $subarray['recruit_status_toggle'] = $item['recruit_status']==1?"checked" : "";
+            $subarray['recruit_status'] = $item['recruit_status'];
             $subarray['platform_name'] = $item['platform_name'];
             $subarray['agency_name'] = $item['agency_name'];
             $data_modal[] = $subarray;
@@ -71,38 +73,60 @@ class RecruitController extends Controller
             // 'total_host' => $modal->total_host
         ]);
 
-        // agency update total host
-        $recruit = Recruit::find($id);
-        $recruit_platform_count = DB::table('tb_recruit')
-        ->select('tb_recruit.platform_id')
-        ->where('agency_id', '=', $recruit->agency_id)
-        ->where('recruit_status', '=', 1)
-        ->count();
-
-        // dd($recruit_platform_count);
-        if($recruit_platform_count > 0)
-        {
-            Agency::where('id', $recruit->agency_id)
-            ->update([
-                'total_platform' => $recruit_platform_count
-            ]);
-        }
-
-        // platform update total agency
-        $recruit_agency_count = DB::table('tb_recruit')
-        ->select('tb_recruit.agency_id')
-        ->where('platform_id', '=', $recruit->platform_id)
-        ->where('recruit_status', '=', 1)
-        ->count();
-
-        if($recruit_agency_count > 0)
-        {
-            Platform::where('id', $recruit->platform_id)
-            ->update([
-                'total_agency' => $recruit_agency_count
-            ]);
-        }
 
         return redirect()->route('recruit.index')->with('success', 'Successfully Update Recruit');
+    }
+
+    public function update_status(Request $request)
+    {
+        // dd($request->desc);
+        if($request->desc == 'changeStatus')
+        {
+            $recruit = Recruit::find($request->id);
+
+            // If Want to activate a Recruit, First Check wether the Platform status is active or not, if not that won't be able to
+            // and revert back the Bootstrap Toggle back to inactive in blade JQUERY
+            if($request->status == 1)
+            {
+                $platform = Platform::find($recruit->platform_id);
+                if($platform)
+                {
+                    if($platform->platform_status == 0)
+                    {
+                        return response()->json(['status' => 'inactive']);
+                    }
+                } else {
+                    return response()->json(['status' => 'inactive']);
+                }
+            }
+
+            Recruit::where('id', '=', $request->id)->update([
+                'recruit_status' => $request->status
+            ]);
+
+            // agency update total host
+            $recruit_platform_count = DB::table('tb_recruit')
+            ->select('tb_recruit.platform_id')
+            ->where('agency_id', '=', $recruit->agency_id)
+            ->where('recruit_status', '=', 1)
+            ->count();
+
+                Agency::where('id', $recruit->agency_id)
+                ->update([
+                    'total_platform' => $recruit_platform_count
+                ]);
+
+            // platform update total agency
+            $recruit_agency_count = DB::table('tb_recruit')
+            ->select('tb_recruit.agency_id')
+            ->where('platform_id', '=', $recruit->platform_id)
+            ->where('recruit_status', '=', 1)
+            ->count();
+
+                Platform::where('id', $recruit->platform_id)
+                ->update([
+                    'total_agency' => $recruit_agency_count
+                ]);
+        }
     }
 }

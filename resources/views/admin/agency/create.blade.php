@@ -58,7 +58,8 @@
                         @enderror
                         <div class="form-group col">
                             <label for="pic_idcard">PIC ID Card</label>
-                            <input type="text" class="form-control" id="pic_idcard" placeholder="Enter ID Card PIC" name="pic_idcard" required>
+                            {{-- <input type="text" class="form-control" id="pic_idcard" placeholder="ID Card PIC" name="pic_idcard" required> --}}
+                            <input type="text" pattern="\d*" maxlength="16" class="form-control" id="pic_idcard" placeholder="ID Card PIC" name="pic_idcard" required>
                         </div>
                         @error('pic_idcard')
                             <div class="text-danger">{{ $message }}</div>
@@ -67,14 +68,15 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="pic_fullname">PIC Full Name</label>
-                            <input type="text" class="form-control" id="pic_fullname" placeholder="Enter PIC Full Name" name="pic_fullname" required>
+                            <input type="text" class="form-control" id="pic_fullname" placeholder="PIC Full Name" name="pic_fullname" required>
                         </div>
                         @error('pic_fullname')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-group col">
                             <label for="pic_phone">PIC Phone Number</label>
-                            <input type="text" class="form-control" id="pic_phone" placeholder="Enter PIC Phone Number" name="pic_phone" required>
+                            {{-- <input type="text" class="form-control" id="pic_phone" placeholder="PIC Phone Number" name="pic_phone" required> --}}
+                            <input type="text" pattern="^\+62\d{10,}$" title="Please enter a valid phone number starting with +62 and containing 10 or more digits." class="form-control" id="pic_phone" placeholder="PIC Phone Number" name="pic_phone" required>
                         </div>
                         @error('pic_phone')
                             <div class="text-danger">{{ $message }}</div>

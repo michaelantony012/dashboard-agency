@@ -47,9 +47,9 @@
                     <tr>
                         <th>Platform Code</th>
                         <th>Platform Name</th>
-                        <th>Platform Status</th>
                         <th>Total Agency</th>
                         <th>Total Host</th>
+                        <th style="width: 100px;">Platform Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -58,9 +58,12 @@
                             <tr>
                                 <td>{{$item['id']}}</td>
                                 <td>{{$item['platform_name']}}</td>
-                                <td>{{$item['platform_status']}}</td>
+                                {{-- <td>{{$item['platform_status']}}</td> --}}
                                 <td>{{$item['total_agency']}}</td>
                                 <td>{{$item['total_host']}}</td>
+                                <td>
+                                    <input type="checkbox" {{ $item['platform_status_toggle'] }} class="changeplatformstatus" data-toggle="toggle"  data-id="{{ $item['id'] }}">
+                                </td>  
                                 <td>
                                     <button class="edit-modal btn btn-info"
                                     onclick="window.location='{{ url('/6462/'.$item['id'].'/75729972') }}'"
@@ -83,9 +86,9 @@
                     <tr>
                         <th>Platform Code</th>
                         <th>Platform Name</th>
-                        <th>Platform Status</th>
                         <th>Total Agency</th>
                         <th>Total Host</th>
+                        <th>Platform Status</th>
                         <th>Actions</th>
                     </tr>
                     </tfoot>
@@ -128,14 +131,48 @@
 
 <script>
     $(function () {
-      $("#example1").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+ 
+            // https://datatables.net/forums/discussion/46832/toggle-button-not-work-on-page-2-and-so-on-how-can-i-fix-it
+            // https://live.datatables.net/noyivopo/1/edit
+            rowCallback: function ( row, data ) {
+                $('input.changeplatformstatus', row).bootstrapToggle({
+                    // size: 'mini'
+                });
+            }
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-      $(".button-delete").on('click', function () {
+        $(".button-delete").on('click', function () {
             // alert($(this).data('delete-link'));
             $('#delete-button-confirm').attr('action', $(this).data('delete-link'));
+        });
+
+        // https://makitweb.com/how-to-add-toggle-button-in-datatables-with-jquery-php/
+        $('#example1').on('change','.changeplatformstatus',function(e){
+        
+            // alert(this.checked);
+            // if (confirm("Are you sure?") == true) {
+                var id = $(this).attr('data-id');
+                var status = 0;
+                if($(this).is(":checked")){
+                    status = 1;
+                }
+
+                $.ajax({
+                    url: '{{url("6462/75729977")}}',
+                    type: 'post',
+                    data: {"_token": "{{ csrf_token() }}",desc: 'changeStatus',status: status,id: id},
+                    success: function(response) {
+                    },
+                    error: function() {
+                    }
+                });
+            // }else{
+            //     e.preventDefault();
+            // }
+
         });
     });
   </script>

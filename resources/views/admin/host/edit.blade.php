@@ -35,14 +35,14 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="host_uid">Host UID</label>
-                            <input type="text" class="form-control" id="host_uid" placeholder="Enter Host UID" name="host_uid" required readonly value="{{ $host_uid }}">
+                            <input type="text" class="form-control" id="host_uid" placeholder="Host UID" name="host_uid" required readonly value="{{ $host_uid }}">
                         </div>
                         @error('host_uid')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-group col">
                             <label for="host_name">Host Name</label>
-                            <input type="text" class="form-control" id="host_name" placeholder="Enter Host Name" name="host_name" required value="{{ $host_name }}">
+                            <input type="text" class="form-control" id="host_name" placeholder="Host Name" name="host_name" required value="{{ $host_name }}">
                         </div>
                         @error('host_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -50,24 +50,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label>Select Platform</label>
-                            <select class="form-control select2" style="width: 100%;" name="platform_id">
-                                @foreach($platform as $plat)
-                                    <option></option>
-                                    <option value="{{ $plat['id'] }}"
-                                    @if ($platform_id == $plat['id'])
-                                        selected
-                                    @endif
-                                    >{{ $plat['platform_name'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('platform_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div class="form-group col">
-                            <label>Select Agency</label>
-                            <select class="form-control select2" style="width: 100%;" name="agency_id">
+                            <label>Agency</label>
+                            <select class="form-control select2" style="width: 100%;" name="agency_id" id="agency_id" required>
                                 <option></option>
                                 @foreach($agency as $agent)
                                     <option value="{{ $agent['id'] }}" 
@@ -79,6 +63,22 @@
                             </select>
                         </div>
                         @error('agency_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-group col">
+                            <label>Platform</label>
+                            <select class="form-control select2" style="width: 100%;" name="platform_id" id="platform_id" required>
+                                @foreach($platform as $plat)
+                                    <option></option>
+                                    <option value="{{ $plat['platform_id'] }}"
+                                    @if ($platform_id == $plat['platform_id'])
+                                        selected
+                                    @endif
+                                    >{{ $plat['platform_name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('platform_id')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -103,5 +103,36 @@
         theme: 'bootstrap4',
             placeholder: "Please select"
         });
+
+        // Set up filtering based on the selection in the first Select2
+        $('#agency_id').on('change', function () {
+            var agencyId = $(this).val();
+
+            // Clear the existing options in the content Select2
+            $('#platform_id').empty();
+
+            // Select Agency first -> Shows PLatform based on Recruit (agency_id) where recruit_status=1
+            // Fetch the filtered content options based on the filterValue using AJAX or any other method
+            // For example, if you want to fetch the options from a Laravel controller, you can use AJAX like this:
+            $.ajax({
+                url: '{{url("6462/75721177")}}',
+                type: 'post',
+                data: {"_token": "{{ csrf_token() }}",agency_id: agencyId},
+                success: function (data) {
+                    // Loop through the fetched data and add options to the content Select2
+                    $.each(data, function (index, option) {
+                        $('#platform_id').append($('<option></option>').attr('value', option.platform_id).text(option.platform_name));
+                    });
+
+                    // Trigger the change event on the content Select2 to update its UI
+                    $('#platform_id').trigger('change');
+                },
+                error: function (error) {
+                    // Handle errors, if any
+                    console.log(error);
+                }
+            });
+        });
+
     })
 </script>

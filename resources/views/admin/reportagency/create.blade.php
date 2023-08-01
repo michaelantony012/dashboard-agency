@@ -79,27 +79,19 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label>Select Agency</label>
+                            <label>Agency</label>
                             <select class="form-control select2" style="width: 100%;" name="agency_id" required>
                                 <option></option>
                                 @foreach($agency as $agent)
                                     <option value="{{ $agent['id'] }}">{{ $agent['agency_name'] }}</option>
                                 @endforeach
-
-                                {{-- <option selected="selected">Alabama</option>
-                                <option>Alaska</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option> --}}
                             </select>
                         </div>
                         @error('agency_id')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-group col">
-                            <label>Select Platform</label>
+                            <label>Platform</label>
                             <select class="form-control select2" style="width: 100%;" name="platform_id" required>
                                 @foreach($platform as $plat)
                                     <option></option>
@@ -113,7 +105,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label for="percentage_share">Enter Percentage Share</label>
+                            <label for="percentage_share">Percentage Share</label>
                             <input type="number" class="form-control" id="percentage_share" placeholder="Percentage Share" name="percentage_share" step=".01" required>
                         </div>
                         @error('percentage_share')
@@ -209,11 +201,33 @@ $(function () {
                 // Update the report_weekmonth field
                 const reportPeriod = $('#report_period').val();
                 if (reportPeriod === '1') {
-                    // Calculate the week of the month based on the endDate
-                    const firstDayOfMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
-                    const daysOffset = firstDayOfMonth.getDay() === 0 ? 1 : 0;
-                    const weekOfMonth = Math.ceil((endDate.getDate() + daysOffset) / 7);
+                    // // Calculate the week of the month based on the endDate
+                    // const firstDayOfMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+                    // const daysOffset = firstDayOfMonth.getDay() === 0 ? 1 : 0;
+                    // const weekOfMonth = Math.ceil((endDate.getDate() + daysOffset) / 7);
+                    // $('#report_weekmonth').val(weekOfMonth);const weekOfMonth = 0;
+
+                    const monthOfStartDate = startDate.getMonth();
+                    const monthOfEndDate = endDate.getMonth();
+                    const dateOfStartDate = startDate.getDate();
+                    const dateOfEndDate = endDate.getDate();
+                    if(monthOfStartDate == monthOfEndDate)
+                    {
+                        weekOfMonth = Math.ceil(dateOfStartDate/7);
+                    }
+                    else
+                    {
+                        if(dateOfEndDate>=4 && dateOfEndDate<=7)
+                        {
+                            weekOfMonth = 1;
+                        }
+                        else
+                        {
+                            weekOfMonth = Math.ceil(dateOfStartDate/7);
+                        }
+                    }
                     $('#report_weekmonth').val(weekOfMonth);
+
                 } else {
                     // Set the month of the year based on the endDate
                     $('#report_weekmonth').val(endDate.getMonth() + 1);
@@ -279,5 +293,9 @@ $(function () {
       theme: 'bootstrap4',
         placeholder: "Please select"
     });
+    // // select 2 readonly by Name
+    // $("select[name*='platform_id']").select2({
+    //   disabled: true
+    // });
 })
 </script>

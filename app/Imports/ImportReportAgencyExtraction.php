@@ -9,9 +9,15 @@ use App\Models\ReportExtraction;
 use App\Models\ReportAgencyExtraction;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 
-class ImportReportAgencyExtraction implements ToModel, WithStartRow
+
+class ImportReportAgencyExtraction implements ToModel, WithStartRow, WithCalculatedFormulas, WithValidation, SkipsOnFailure
 {
+    use SkipsFailures;
 
     private $report_code;
     private $report_idl;
@@ -29,6 +35,16 @@ class ImportReportAgencyExtraction implements ToModel, WithStartRow
         return 2;
     }
 
+    public function rules(): array
+    {
+        return [
+            '1' => 'required|string',
+            '2' => 'required|string',
+            '3' => 'required|string',
+            '4' => 'required|numeric',
+        ];
+    }
+
     /**
     * @param array $row
     *
@@ -42,20 +58,26 @@ class ImportReportAgencyExtraction implements ToModel, WithStartRow
         // dd($row[4]);
 
         $host = Host::where('host_uid', $row[1])->first();
-        $agency = Agency::where('agency_name', $row[2])->first();
-        $platform = Platform::where('platform_name', $row[3])->first();
+        /**
+         * Platform dan Agency Mengikuti header
+         */
+        // $agency = Agency::where('agency_name', $row[2])->first();
+        // $platform = Platform::where('platform_name', $row[3])->first();
         return new ReportAgencyExtraction([
             'report_id' => $this->report_id,
             'report_order' => $row[0],
             'report_code' => $this->report_code,
             'host_id' => $host?$host['id']:null,
             'host_uid' => $row[1],
-            'agency_id' => $agency?$agency['id']:null,
-            'agency_name' => $row[2],
-            'platform_id' => $platform?$platform['id']:null,
-            'platform_name' => $row[3],
             'total_salary' => $row[4],
 
+            /**
+             * Platform dan Agency Mengikuti header
+             */
+            // 'agency_id' => $agency?$agency['id']:null,
+            // 'agency_name' => $row[2],
+            // 'platform_id' => $platform?$platform['id']:null,
+            // 'platform_name' => $row[3],
         ]);
     }
 }

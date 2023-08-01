@@ -22,7 +22,8 @@ class PlatformController extends Controller
             $subarray=[];
             $subarray['id'] = $item['id'];
             $subarray['platform_name'] = $item['platform_name'];
-            $subarray['platform_status'] = $item['platform_status'] == 1? "true" : "false";
+            $subarray['platform_status'] = $item['platform_status'] == 1? "Active" : "Inactive";
+            $subarray['platform_status_toggle'] = $item['platform_status'] == 1? "checked" : "";
             $subarray['total_agency'] = $item['total_agency'];
             $subarray['total_host'] = $item['total_host'];
             $data_modal[] = $subarray;
@@ -43,7 +44,7 @@ class PlatformController extends Controller
             'title' => 'Edit Platform',
             'id' => $id,
             'platform_name' => $modal->platform_name,
-            'platform_status' => $modal->platform_status,
+            // 'platform_status' => $modal->platform_status,
             // 'total_agency' => $modal->total_agency,
             // 'total_host' => $modal->total_host
         ];
@@ -57,13 +58,13 @@ class PlatformController extends Controller
 
         $request->validate([
             'platform_name' => 'required',
-            'platform_status' => 'required',
+            // 'platform_status' => 'required',
         ]);
 
         Platform::where('id', '=', $request->id)
         ->update([
             'platform_name' => $request->platform_name,
-            'platform_status' => $request->platform_status
+            // 'platform_status' => $request->platform_status
             // 'total_agency' => $modal->total_agency,
             // 'total_host' => $modal->total_host
         ]);
@@ -97,7 +98,7 @@ class PlatformController extends Controller
         ]);
 
         // Auto Recruit
-        if($create_platform && $create_platform->platform_status==1)
+        if($create_platform /*&& $create_platform->platform_status==1*/ ) // revisi->auto create tidak melihat status platform aktif/tidak
         {
             $agency = Agency::get();
             foreach($agency as $agent)
@@ -115,8 +116,81 @@ class PlatformController extends Controller
     }
     public function destroy($id)
     {
+        // Auto Delete Recruit
+        DB::delete('delete from tb_recruit where platform_id = ?', [$id]);
+
         DB::delete('delete from tb_platform where id = ?', [$id]);
 
         return redirect()->route('platform.index')->with('success', 'Successfully Delete Platform');
+    }
+    public function update_status(Request $request)
+    {
+        // dd($request->desc);
+        if($request->desc == 'changeStatus')
+        {
+            $recruit = Platform::find($request->id);
+
+            // Auto Inactive Recruit if Platform Status is set to Inactive
+            if($request->status == 0)
+            {
+                $recruit_get = Recruit::where('platform_id', '=', $request->id)->get();
+                foreach($recruit_get as $rec)
+                {
+                    Recruit::where('id', '=', $rec->id)->update([
+                        'recruit_status' => 0
+                    ]);
+        
+                    // agency update total host
+                    $recruit = Recruit::find($rec->id);
+                    $recruit_platform_count = DB::table('tb_recruit')
+                    ->select('tb_recruit.platform_id')
+                    ->where('agency_id', '=', $recruit->agency_id)
+                    ->where('recruit_status', '=', 1)
+                    ->count();
+        
+                        Agency::where('id', $recruit->agency_id)
+                        ->update([
+                            'total_platform' => $recruit_platform_count
+                        ]);
+        
+                    // platform update total agency
+                    $recruit_agency_count = DB::table('tb_recruit')
+                    ->select('tb_recruit.agency_id')
+                    ->where('platform_id', '=', $recruit->platform_id)
+                    ->where('recruit_status', '=', 1)
+                    ->count();
+        
+                        Platform::where('id', $recruit->platform_id)
+                        ->update([
+                            'total_agency' => $recruit_agency_count
+                        ]);
+                }
+            }
+            // Platform update status to active => jika recruit utk platform tsb belum ada , buat recruit
+            else if ($request->status == 1)
+            {
+                $agency = Agency::all();
+                foreach($agency as $agn)
+                {
+                    $recruited = Recruit::where('platform_id', $request->id)->where('agency_id', $agn->id)->first();
+                    
+                    if(!$recruited)
+                    {
+                        Recruit::create([
+                            'platform_id' => $request->id,
+                            'agency_id' => $agn->id,
+                            'recruit_status' => 0 // false
+                        ]);
+                    }
+                }
+            }
+
+            // Update
+            Platform::where('id', '=', $request->id)->update([
+                'platform_status' => $request->status
+            ]);
+
+
+        }
     }
 }

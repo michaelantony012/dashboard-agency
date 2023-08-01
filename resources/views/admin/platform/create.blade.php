@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="platform_name">Platform Name</label>
-                            <input type="text" class="form-control" id="platform_name" placeholder="Enter Platform Name" name="platform_name" required>
+                            <input type="text" class="form-control" id="platform_name" placeholder="Platform Name" name="platform_name" required>
                         </div>
                         @error('platform_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -43,8 +43,8 @@
                         <div class="form-group col">
                             <label for="platform_status">Platform Status</label>
                             <select class="form-control select2" style="width: 100%;" name="platform_status">=
-                                    <option value="1">True</option>
-                                    <option value="0">False</option>=
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>=
                             </select>
                         </div>
                         @error('platform_status')

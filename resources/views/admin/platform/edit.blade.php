@@ -8,12 +8,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">Edit Agency</h1>
+        <h1 class="m-0">Edit Platform</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('agency.index') }}">Agency</a></li>
-            <li class="breadcrumb-item active">Edit Agency</li>
+            <li class="breadcrumb-item"><a href="{{ route('platform.index') }}">Platform</a></li>
+            <li class="breadcrumb-item active">Edit Platform</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -35,25 +35,25 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="platform_name">Platform Name</label>
-                            <input type="text" class="form-control" id="platform_name" placeholder="Enter Platform Name" name="platform_name" required value="{{ $platform_name }}">
+                            <input type="text" class="form-control" id="platform_name" placeholder="Platform Name" name="platform_name" required value="{{ $platform_name }}">
                         </div>
                         @error('platform_name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                        <div class="form-group col">
+                        {{-- <div class="form-group col">
                             <label for="platform_status">Platform Status</label>
                             <select class="form-control select2" style="width: 100%;" name="platform_status">=
                                     <option value="1" @if ($platform_status == 1)
                                     selected
-                                @endif>True</option>
+                                @endif>Active</option>
                                     <option value="0" @if ($platform_status == 0)
                                     selected
-                                @endif>False</option>=
+                                @endif>Inactive</option>=
                             </select>
                         </div>
                         @error('platform_status')
                             <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                        @enderror --}}
                     </div>
                     {{-- <div class="row">
                         <div class="form-group col">

@@ -40,6 +40,14 @@
   {{-- Select2 --}}
   <link rel="stylesheet" href="{{ asset('admin-assets/plugins/select2/css/select2.min.css')}}">
   <link rel="stylesheet" href="{{ asset('admin-assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+
+  {{-- Toggle Button --}}
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <style>
+    thead input { /* Search bar per column in Host Module */
+        width: 100%;
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -170,6 +178,9 @@
 
 {{-- Custom file input --}}
 <script src="{{ asset('admin-assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+
+{{-- Toggle Button --}}
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 </body>
 </html>
