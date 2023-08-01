@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="agency_name">Agency Name</label>
-                            <input type="text" class="form-control" id="agency_name" placeholder="Agency Name" name="agency_name" required>
+                            <input type="text" class="form-control" id="agency_name" placeholder="Agency Name" name="agency_name" required maxlength="100">
                         </div>
                         @error('agency_name')
                             <div class="text-danger">{{ $message }}</div>
@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="pic_fullname">PIC Full Name</label>
-                            <input type="text" class="form-control" id="pic_fullname" placeholder="PIC Full Name" name="pic_fullname" required>
+                            <input type="text" class="form-control" id="pic_fullname" placeholder="PIC Full Name" name="pic_fullname" required maxlength="100">
                         </div>
                         @error('pic_fullname')
                             <div class="text-danger">{{ $message }}</div>
