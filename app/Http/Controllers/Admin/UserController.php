@@ -22,6 +22,7 @@ class UserController extends Controller
         */
         $modal = DB::table('users')
         ->leftJoin('tb_agency', 'users.agency_id', '=', 'tb_agency.id')
+        ->where('users.show', 1)
         ->select('users.*', 'tb_agency.agency_name')
         ->get();
         // dd($modasl);
@@ -65,9 +66,8 @@ class UserController extends Controller
         $request->validate([
             'name'=>'required',
             'email'=>'required|email',
-            'password'=>'required',
-            'level_access' => 'required',
-            'agency_id' => 'required'
+            // 'password'=>'required',
+            'level_access' => 'required'
         ]);
         // dd('name: '.$request->name.', email: '.$request->email.', password: '.Hash::make($request->password));
         // dd($request->level_access);
@@ -81,14 +81,26 @@ class UserController extends Controller
             $x++;
         }
         // dd($level_access);
-        User::where('id', $id)
-        ->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'level_access' => $level_access,
-            'password' => Hash::make($request->password),
-            // 'agency_id' => $request->agency_id
-        ]);
+        if(trim($request->password)=="")
+        {
+            User::where('id', $id)
+            ->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'level_access' => $level_access,
+                'agency_id' => $request->agency_id
+            ]);
+        } else
+        {
+            User::where('id', $id)
+            ->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'level_access' => $level_access,
+                'password' => Hash::make($request->password),
+                'agency_id' => $request->agency_id
+            ]);
+        }
 
         return redirect()->route('users.index')->with('success', 'Successfully Update User');
     }
@@ -119,15 +131,15 @@ class UserController extends Controller
             'name'=>'required',
             'email'=>'required|email',
             'password'=>'required',
-            'level_access' => 'required',
-            // 'agency_id' => 'required'
+            'level_access' => 'required'
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'level_access' => $level_access
+            'level_access' => $level_access,
+            'agency_id' => $request->agency_id
         ]);
 
         return redirect()->route('users.index')->with('success', 'Successfully Create New User');

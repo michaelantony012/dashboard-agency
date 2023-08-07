@@ -94,7 +94,7 @@ class ReportAgencyController extends Controller
         // dd($extraction_array);
 
         $data = [
-            'title' => str_contains( auth()->user()->level_access, 'Admin')?'Edit Report Agency':'View Report Agency',
+            'title' => 'Edit Report Agency',
             'id' => $id,
             'report_code' => $modal->report_code,
             'report_weekmonth' => $modal->report_weekmonth,
@@ -114,6 +114,58 @@ class ReportAgencyController extends Controller
             'total_share' => number_format($modal->total_share,2)
         ];
         return view('admin.reportagency.edit', $data);
+    }
+    
+    public function view_non_admin($id)
+    {
+        $modal = ReportAgency::find($id);
+        $agency_one = Agency::find($modal->agency_id);
+        $platform_one = Platform::find($modal->platform_id);
+        $agency = Agency::all();
+        $platform = Platform::all();
+        // dd('id: '.$id);
+
+        // data extraction
+        $extraction = DB::table('tb_extraction') // perlu diperbaiki
+        // ->leftJoin('tb_platform', 'tb_extraction.platform_id', '=', 'tb_platform.id')
+        // ->leftJoin('tb_agency', 'tb_extraction.agency_id', '=', 'tb_agency.id')
+        // ->leftJoin('tb_host', 'tb_extraction.host_id', '=', 'tb_host.id')
+        ->select('tb_extraction.id', 'tb_extraction.report_order', 'tb_extraction.report_id', 'tb_extraction.report_code', 'tb_extraction.platform_name', 'tb_extraction.platform_id', 'tb_extraction.agency_name', 'tb_extraction.agency_id', 'tb_extraction.host_uid', 'tb_extraction.host_id', 'tb_extraction.total_salary')
+        ->where('report_id', $id)
+        ->get();
+        $extraction_result = json_decode($extraction, true);
+        // dd($extraction_result);
+        $extraction_array = [];
+        foreach($extraction_result as $ext)
+        {
+            $ext['platform_found_status'] = $ext['platform_id']!=null?"OK":"Not Found";
+            $ext['agency_found_status'] = $ext['agency_id']!=null?"OK":"Not Found";
+            $ext['host_found_status'] = $ext['host_id']!=null?"OK":"Not Found";
+            $extraction_array[] = $ext;
+        }
+        // dd($extraction_array);
+
+        $data = [
+            'title' => 'View Report Agency',
+            'id' => $id,
+            'report_code' => $modal->report_code,
+            'report_weekmonth' => $modal->report_weekmonth,
+            'report_period' => $modal->report_period,
+            'report_startdate' => Carbon::createFromFormat('Y-m-d', $modal->report_startdate)->format('d/m/Y'),
+            'report_enddate' => Carbon::createFromFormat('Y-m-d', $modal->report_enddate)->format('d/m/Y'),
+            'agency_id' => $modal->agency_id,
+            'agency_name' => $agency_one->agency_name,
+            'platform_id' => $modal->platform_id,
+            'platform_name' => $platform_one->platform_name,
+            'percentage_share' => $modal->percentage_share,
+            'agency' => $agency,
+            'platform' => $platform,
+            'extraction' => $extraction_array,
+            'total_paidhost' => number_format($modal->total_paidhost,0),
+            'total_salary' => number_format($modal->total_salary,2),
+            'total_share' => number_format($modal->total_share,2)
+        ];
+        return view('admin.reportagency.view-non-admin', $data);
     }
     public function update(Request $request, $id)
     {
@@ -212,6 +264,16 @@ class ReportAgencyController extends Controller
         // dd(substr("0".$request->report_week, -2));
         $report_code = substr("0".$request->report_enddate, 9,2).substr("0".$request->report_enddate, 4,2).(string)($request->report_period==1?"W":"M").substr("0".$request->report_weekmonth, -2).'/'.$platform->id.'/'.$agency->id;
         // dd($report_code);
+
+        // check if report exist
+        $check = ReportAgency::where('report_code', $report_code)->first();
+        // dd($check);
+
+        if($check)
+        {
+            return redirect()->back()->withInput()->with('alert',"Report ".$report_code." already exists!");
+        }
+
         $report = ReportAgency::create([
             'report_code' => $report_code,
             'report_period' => $request->report_period,
@@ -226,6 +288,7 @@ class ReportAgencyController extends Controller
             // total_share  
         ]);
 
+        /*
         if($request->file('upload_detail'))
         {
             $delete_extraction = ReportExtraction::where('report_id', $report->id)->delete();
@@ -248,6 +311,7 @@ class ReportAgencyController extends Controller
         {
             ReportAgency::where('id', $id)->update(['total_salary' => $sum_salary, 'total_share' => ($sum_salary * ($report_agency->percentage_share/100))]);
         }
+        */
 
         return redirect()->route('reportagency.edit', [$report->id])->with('success', 'Successfully Create New Report');
     }
@@ -257,5 +321,11 @@ class ReportAgencyController extends Controller
         DB::delete('delete from tb_report where id = ?', [$id]);
 
         return redirect()->route('reportagency.index')->with('success', 'Successfully Delete Report');
+    }
+    public function exportTemplate($id)
+    {
+        $report = ReportAgency::where('id', $id)->first();
+
+        return Excel::download(new ExportReportAgencyExtractionTemplate, str_replace('/', '-', $report->report_code.'.xlsx'));
     }
 }

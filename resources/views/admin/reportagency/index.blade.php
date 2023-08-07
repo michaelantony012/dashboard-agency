@@ -92,7 +92,7 @@
                                 @if (auth()->user()->level_access == "Agency")
                                 <td>
                                     <button class="edit-modal btn btn-info"
-                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75727972') }}'"
+                                    onclick="window.location='{{ url('/6462/'.$item['id'].'/75727978') }}'"
                                         data-info="{{$item['report_code']}},{{$item['report_weekmonth']}}">
                                         <span class="glyphicon glyphicon-edit"></span> View
                                     </button>

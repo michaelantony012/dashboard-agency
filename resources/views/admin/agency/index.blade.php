@@ -60,7 +60,7 @@
                     <tbody>
                         @foreach($data['data_modal'] as $item)
                             <tr>
-                                <td>{{$item['id']}}</td>
+                                <td>{{$item['agency_code']}}</td>
                                 <td>{{$item['agency_name']}}</td>
                                 <td>{{$item['pic_fullname']}}</td>
                                 <td>{{$item['total_platform']}}</td>

@@ -35,10 +35,17 @@
                 <div class="card">
                 <div class="card-header">
                     {{-- <h3 class="card-title">User Index</h3> --}}
-                <button class="edit-modal btn btn-info"
-                onclick="window.location='{{ url('/6462/75721174') }}'">
-                    <span class="glyphicon glyphicon-edit"></span> Create
-                </button>
+                @if (str_contains( auth()->user()->level_access, 'Admin'))
+                    <button class="edit-modal btn btn-info"
+                    onclick="window.location='{{ url('/6462/75721174') }}'">
+                        <span class="glyphicon glyphicon-edit"></span> Create
+                    </button>
+                @else
+                    <button class="edit-modal btn btn-info"
+                    onclick="window.location='{{ url('/6462/75721178') }}'">
+                        <span class="glyphicon glyphicon-edit"></span> Create
+                    </button>
+                @endif
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -65,11 +72,19 @@
                                 @endif
                                 <td>
                                     <div class = "btn-group">
-                                        <button class="edit-modal btn btn-info"
-                                        onclick="window.location='{{ url('/6462/'.$item['id'].'/75721172') }}'"
-                                            data-info="{{$item['id']}},{{$item['host_uid']}}">
-                                            <span class="glyphicon glyphicon-edit"></span> Edit
-                                        </button>
+                                        @if (str_contains( auth()->user()->level_access, 'Admin'))
+                                            <button class="edit-modal btn btn-info"
+                                            onclick="window.location='{{ url('/6462/'.$item['id'].'/75721172') }}'"
+                                                data-info="{{$item['id']}},{{$item['host_uid']}}">
+                                                <span class="glyphicon glyphicon-edit"></span> Edit
+                                            </button>
+                                        @else
+                                            <button class="edit-modal btn btn-info"
+                                            onclick="window.location='{{ url('/6462/'.$item['id'].'/75721179') }}'"
+                                                data-info="{{$item['id']}},{{$item['host_uid']}}">
+                                                <span class="glyphicon glyphicon-edit"></span> Edit
+                                            </button>
+                                        @endif
                                         {{-- <button class="delete-modal btn btn-danger"
                                         onclick="window.location='{{ url('/6462/'.$item['id'].'/75721176') }}'"
                                             data-info="{{$item['id']}},{{$item['host_uid']}}">
@@ -196,6 +211,9 @@
                     });
             },
         }).buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
+
+        // hide top search bar
+        $("#example_filter").hide();
 
         $(".button-delete").on('click', function () {
             // alert($(this).data('delete-link'));

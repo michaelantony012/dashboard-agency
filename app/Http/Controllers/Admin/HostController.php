@@ -53,12 +53,8 @@ class HostController extends Controller
     {
         $modal = Host::where('id', $id)->first();
 
-        if (str_contains( auth()->user()->level_access, 'Admin'))
-        {
-            $agency = Agency::all();
-        }else {
-            $agency = Agency::where('id', auth()->user()->agency_id)->get();
-        }
+        $agency = Agency::all();
+        
         // dd($agency);
         // $platform = Platform::where('platform_status', '=', '1')->get();
         
@@ -87,23 +83,77 @@ class HostController extends Controller
         ];
         return view('admin.host.edit', $data);
     }
+    public function edit_non_admin($id)
+    {
+        $modal = Host::where('id', $id)->first();
+
+        $agency = Agency::where('id', auth()->user()->agency_id)->get();
+        // dd($agency);
+        // $platform = Platform::where('platform_status', '=', '1')->get();
+        
+        // // Select Agency first -> Shows PLatform based on Recruit (agency_id) where recruit_status=1
+        $platform = DB::table('tb_recruit')
+        ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
+        ->where('tb_recruit.recruit_status', '=', 1)
+        ->where('tb_recruit.agency_id', '=', $modal->agency_id)
+        ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
+        ->get();
+
+        // dd(json_decode(json_encode($platform), true));
+
+        // dd($modal);
+        $data = [
+            'title' => 'Edit Host',
+            'id' => $id,
+            'host_uid' => $modal->host_uid,
+            'host_name' => $modal->host_name,
+            'platform_id' => $modal->platform_id,
+            'agency_id' => $modal->agency_id,
+            'agency' => $agency,
+            'platform' => json_decode(json_encode($platform), true)
+            // 'total_agency' => $modal->total_agency,
+            // 'total_host' => $modal->total_host
+        ];
+        return view('admin.host.edit-non-admin', $data);
+    }
     public function update(Request $request, $id)
     {
         $result = json_encode($request);
 
-        $request->validate([
-            'host_uid' => 'required',
-            'host_name' => 'required',
-            'platform_id' => 'required',
-            'agency_id' => 'required',
-        ]);
+        if (str_contains( auth()->user()->level_access, 'Admin'))
+        {
+            $request->validate([
+                'host_uid' => 'required',
+                'host_name' => 'required',
+                'platform_id' => 'required',
+                'agency_id' => 'required',
+            ]);
+            $agency_id = $request->agency_id;
+        } else 
+        {
+            $request->validate([
+                'host_uid' => 'required',
+                'host_name' => 'required',
+                'platform_id' => 'required'
+            ]);
+            $agency_id = auth()->user()->agency_id;
+        }
+
+        // check if host exist
+        $check = Host::where('host_uid', $request->host_uid)->where('id','!=',$id)->first();
+        // dd($check);
+
+        if($check)
+        {
+            return redirect()->back()->withInput()->with('alert',"Host UID ".$request->host_uid." already exists!");
+        }
 
         Host::where('id', '=', $request->id)
         ->update([
             'host_uid' => $request->host_uid,
             'host_name' => $request->host_name,
             'platform_id' => $request->platform_id,
-            'agency_id' => $request->agency_id,
+            'agency_id' => $agency_id
             // 'total_agency' => $modal->total_agency,
             // 'total_host' => $modal->total_host
         ]);
@@ -127,19 +177,8 @@ class HostController extends Controller
     }
     public function create()
     {
-        if (str_contains( auth()->user()->level_access, 'Admin'))
-        {
-            $agency = Agency::all();
-            $platform = [];
-        } else {
-            $agency = Agency::where('id',auth()->user()->agency_id)->get();
-            $platform = DB::table('tb_recruit')
-            ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
-            ->where('tb_recruit.recruit_status', '=', 1)
-            ->where('tb_recruit.agency_id', '=', auth()->user()->agency_id)
-            ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
-            ->get();
-        }
+        $agency = Agency::all();
+        $platform = [];
         // $platform = Platform::where('platform_status', '=', '1')->get();
         $data = [
             'title' => 'Create Host',
@@ -149,23 +188,67 @@ class HostController extends Controller
         ];
         return view('admin.host.create', $data);
     }
+    public function create_non_admin()
+    {
+        $agency = Agency::where('id',auth()->user()->agency_id)->get();
+        $platform = DB::table('tb_recruit')
+        ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
+        ->where('tb_recruit.recruit_status', '=', 1)
+        ->where('tb_recruit.agency_id', '=', auth()->user()->agency_id)
+        ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
+        ->get();
+        // $platform = Platform::where('platform_status', '=', '1')->get();
+        $data = [
+            'title' => 'Create Host',
+            'agency' => $agency,
+            'platform' => json_decode(json_encode($platform), true),
+            'auth_agency_id' => auth()->user()->agency_id
+        ];
+        return view('admin.host.create-non-admin', $data);
+    }
     public function store(Request $request)
     {
         // $result = json_decode($request);
         // dd($request);
+        if (str_contains( auth()->user()->level_access, 'Admin'))
+        {
+            $request->validate([
+                'host_uid' => 'required',
+                'host_name' => 'required',
+                'platform_id' => 'required',
+                'agency_id' => 'required',
+            ]);
+            $agency_id = $request->agency_id;
+        } else 
+        {
+            $request->validate([
+                'host_uid' => 'required',
+                'host_name' => 'required',
+                'platform_id' => 'required'
+            ]);
+            $agency_id = auth()->user()->agency_id;
+        }
 
-        $request->validate([
-            'host_uid' => 'required',
-            'host_name' => 'required',
-            'platform_id' => 'required',
-            'agency_id' => 'required',
-        ]);
+        // check if host exist
+        $check = Host::where('host_uid', $request->host_uid)->first();
+        // dd($check);
+
+        if($check)
+        {
+            $platform = DB::table('tb_recruit')
+                ->Join('tb_platform', 'tb_recruit.platform_id', '=', 'tb_platform.id')
+                ->where('tb_recruit.recruit_status', '=', 1)
+                ->where('tb_recruit.agency_id', '=', $request->agency_id)
+                ->select('tb_recruit.platform_id', 'tb_platform.platform_name')
+                ->get();
+            return redirect()->back()->withInput()->with('alert',"Host UID ".$request->host_uid." already exists!")->with('platform', json_decode(json_encode($platform), true));
+        }
 
         $create_host = Host::create([
             'host_uid' => $request->host_uid,
             'host_name' => $request->host_name,
             'platform_id' => $request->platform_id,
-            'agency_id' => $request->agency_id,
+            'agency_id' => $agency_id
             
         ]);
         

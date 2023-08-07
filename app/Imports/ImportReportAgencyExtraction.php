@@ -39,9 +39,7 @@ class ImportReportAgencyExtraction implements ToModel, WithStartRow, WithCalcula
     {
         return [
             '1' => 'required|string',
-            '2' => 'required|string',
-            '3' => 'required|string',
-            '4' => 'required|numeric',
+            '2' => 'required|numeric',
         ];
     }
 
@@ -69,7 +67,7 @@ class ImportReportAgencyExtraction implements ToModel, WithStartRow, WithCalcula
             'report_code' => $this->report_code,
             'host_id' => $host?$host['id']:null,
             'host_uid' => $row[1],
-            'total_salary' => $row[4],
+            'total_salary' => $row[2],
 
             /**
              * Platform dan Agency Mengikuti header

@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Agency;
 use App\Models\Recruit;
 use App\Models\Platform;
+use App\Models\AgencyCode;
+use App\Models\PlatformCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AgencyController extends Controller
 {
@@ -21,6 +24,7 @@ class AgencyController extends Controller
         {
             $subarray=[];
             $subarray['id'] = $item['id'];
+            $subarray['agency_code'] = $item['agency_code'];
             $subarray['agency_name'] = $item['agency_name'];
             $subarray['pic_idcard'] = $item['pic_idcard'];
             $subarray['pic_fullname'] = $item['pic_fullname'];
@@ -111,7 +115,13 @@ class AgencyController extends Controller
             'pic_phone' => 'required'
         ]);
 
+        // get agency code that's not occupied
+        $get_code = AgencyCode::where('occupied', '=', 0)->orderBy('agency_code', 'asc')->first();
+
+        // dd($get_code);
+
         $create_agency = Agency::create([
+            'agency_code' => $get_code->agency_code,
             'agency_name' => $request->agency_name,
             'agency_bank' => $request->agency_bank,
             'agency_bank_id' => $request->agency_bank_id,
@@ -127,6 +137,9 @@ class AgencyController extends Controller
         // Auto Recruit
         if($create_agency)
         {
+            // Set agency code to occupied
+            AgencyCode::where('agency_code', $get_code->agency_code)->update(['occupied'=>1]);
+
             $platform = Platform::where('platform_status','=','1')->get();
             foreach($platform as $plat)
             {
@@ -143,11 +156,36 @@ class AgencyController extends Controller
     }
     public function destroy($id)
     {
+        // update agency code to not occupied
+        $agency = Agency::where('id', $id)->first();
+        AgencyCode::where('agency_code', $agency->agency_code)->update(['occupied'=>0]);
+
         // Auto Delete Recruit
         DB::delete('delete from tb_recruit where agency_id = ?', [$id]);
+
+        // Auto Delete Report Agency
+        DB::delete('delete from tb_report where agency_id = ?', [$id]);
+
+        // Auto Delete Host
+        DB::delete('delete from tb_host where agency_id = ?', [$id]);
         
         DB::delete('delete from tb_agency where id = ?', [$id]);
 
         return redirect()->route('agency.index')->with('success', 'Successfully Delete Agency');
+    }
+    public function loop()
+    {
+        // $i = 1200;
+        // while($i<4801)
+        // {
+        //     AgencyCode::create(['agency_code'=>$i, 'occupied'=>false]);
+        //     $i++;
+        // }
+        // $i = 10;
+        // while($i<61)
+        // {
+        //     PlatformCode::create(['platform_code'=>$i, 'occupied'=>false]);
+        //     $i++;
+        // }
     }
 }

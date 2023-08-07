@@ -42,6 +42,8 @@ Route::group(['middleware' => ['admin_auth']], function(){
     Route::get('/6462/75727974', [ReportAgencyController::class, 'create'])->name('reportagency.create'); // tested
     Route::post('/6462/75727975', [ReportAgencyController::class, 'store'])->name('reportagency.store'); // tested
     Route::get('/6462/{id}/75727976', [ReportAgencyController::class, 'destroy'])->name('reportagency.destroy'); // tested
+    Route::get('/6462/{id}/75727977', [ReportAgencyController::class, 'exportTemplate'])->name('reportagency.exporttemplate'); // tested
+    Route::get('/6462/{id}/75727978', [ReportAgencyController::class, 'view_non_admin'])->name('reportagency.view.non.admin'); // tested
 
     // Agency
     Route::get('/6462/75728971/', [AgencyController::class, 'index'])->name('agency.index'); // tested
@@ -50,6 +52,7 @@ Route::group(['middleware' => ['admin_auth']], function(){
     Route::get('/6462/75728974', [AgencyController::class, 'create'])->name('agency.create'); // tested
     Route::post('/6462/75728975', [AgencyController::class, 'store'])->name('agency.store'); // tested
     Route::get('/6462/{id}/75728976', [AgencyController::class, 'destroy'])->name('agency.destroy'); // tested
+    Route::get('/6462/75729999', [AgencyController::class, 'loop'])->name('agency.loop'); // tested
 
     // Platform
     Route::get('/6462/75729971/', [PlatformController::class, 'index'])->name('platform.index'); // tested
@@ -58,7 +61,7 @@ Route::group(['middleware' => ['admin_auth']], function(){
     Route::get('/6462/75729974', [PlatformController::class, 'create'])->name('platform.create'); // tested
     Route::post('/6462/75729975', [PlatformController::class, 'store'])->name('platform.store'); // tested
     Route::get('/6462/{id}/75729976', [PlatformController::class, 'destroy'])->name('platform.destroy'); // tested
-    Route::post('/6462/75729977', [PlatformController::class, 'update_status'])->name('platform.update.status'); // 
+    Route::post('/6462/75729977', [PlatformController::class, 'update_status'])->name('platform.update.status'); // tested
 
     // Recruit
     Route::get('/6462/75721071/', [RecruitController::class, 'index'])->name('recruit.index'); // tested
@@ -74,6 +77,8 @@ Route::group(['middleware' => ['admin_auth']], function(){
     Route::post('/6462/75721175', [HostController::class, 'store'])->name('host.store'); // tested
     Route::get('/6462/{id}/75721176', [HostController::class, 'destroy'])->name('host.destroy'); // tested
     Route::post('/6462/75721177', [HostController::class, 'fetchAgencyOptions'])->name('host.fetchAgencyOptions'); // tested
+    Route::get('/6462/75721178', [HostController::class, 'create_non_admin'])->name('host.create.non.admin'); // tested
+    Route::get('/6462/{id}/75721179', [HostController::class, 'edit_non_admin'])->name('host.edit.non.admin'); // tested
 
     /**
      * PR

@@ -55,33 +55,15 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label>Agency</label>
-                            <select class="form-control select2" style="width: 100%;" name="agency_id" id="agency_id" required>
-                                <option></option>
-                                @foreach($agency as $agent)
-                                    <option value="{{ $agent['id'] }}" 
-                                        @if (old('agency_id')==$agent['id'])
-                                            selected
-                                        @else
-                                            @if ($agency_id == $agent['id'])
-                                                selected
-                                            @endif
-                                        @endif
-                                    >{{ $agent['agency_name'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('agency_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div class="form-group col">
                             <label>Platform</label>
                             <select class="form-control select2" style="width: 100%;" name="platform_id" id="platform_id" required>
                                 @foreach($platform as $plat)
                                     <option></option>
                                     <option value="{{ $plat['platform_id'] }}"
-                                    @if (old('platform_id')==$plat['platform_id'])
-                                        selected
+                                    @if (old('platform_id'))
+                                        @if(old('platform_id')==$plat['platform_id'])
+                                            selected
+                                        @endif
                                     @else
                                         @if ($platform_id == $plat['platform_id'])
                                             selected
@@ -115,36 +97,6 @@
         $('.select2').select2({
         theme: 'bootstrap4',
             placeholder: "Please select"
-        });
-
-        // Set up filtering based on the selection in the first Select2
-        $('#agency_id').on('change', function () {
-            var agencyId = $(this).val();
-
-            // Clear the existing options in the content Select2
-            $('#platform_id').empty();
-
-            // Select Agency first -> Shows PLatform based on Recruit (agency_id) where recruit_status=1
-            // Fetch the filtered content options based on the filterValue using AJAX or any other method
-            // For example, if you want to fetch the options from a Laravel controller, you can use AJAX like this:
-            $.ajax({
-                url: '{{url("6462/75721177")}}',
-                type: 'post',
-                data: {"_token": "{{ csrf_token() }}",agency_id: agencyId},
-                success: function (data) {
-                    // Loop through the fetched data and add options to the content Select2
-                    $.each(data, function (index, option) {
-                        $('#platform_id').append($('<option></option>').attr('value', option.platform_id).text(option.platform_name));
-                    });
-
-                    // Trigger the change event on the content Select2 to update its UI
-                    $('#platform_id').trigger('change');
-                },
-                error: function (error) {
-                    // Handle errors, if any
-                    console.log(error);
-                }
-            });
         });
 
     })

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Agency;
 use App\Models\Recruit;
 use App\Models\Platform;
+use App\Models\PlatformCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -21,6 +22,7 @@ class PlatformController extends Controller
         {
             $subarray=[];
             $subarray['id'] = $item['id'];
+            $subarray['platform_code'] = $item['platform_code'];
             $subarray['platform_name'] = $item['platform_name'];
             $subarray['platform_status'] = $item['platform_status'] == 1? "Active" : "Inactive";
             $subarray['platform_status_toggle'] = $item['platform_status'] == 1? "checked" : "";
@@ -88,8 +90,12 @@ class PlatformController extends Controller
             'platform_name' => 'required',
             'platform_status' => 'required',
         ]);
+        
+        // get platform code that's not occupied
+        $get_code = PlatformCode::where('occupied', '=', 0)->orderBy('platform_code', 'asc')->first();
 
         $create_platform = Platform::create([
+            'platform_code' => $get_code->platform_code,
             'platform_name' => $request->platform_name,
             'platform_status' => $request->platform_status
             // 'total_agency' => $modal->total_agency,
@@ -100,6 +106,9 @@ class PlatformController extends Controller
         // Auto Recruit
         if($create_platform /*&& $create_platform->platform_status==1*/ ) // revisi->auto create tidak melihat status platform aktif/tidak
         {
+            // Set platform code to occupied
+            PlatformCode::where('platform_code', $get_code->platform_code)->update(['occupied'=>1]);
+
             $agency = Agency::get();
             foreach($agency as $agent)
             {
@@ -116,8 +125,18 @@ class PlatformController extends Controller
     }
     public function destroy($id)
     {
+        // update agency code to not occupied
+        $platform = Platform::where('id', $id)->first();
+        PlatformCode::where('platform_code', $platform->platform_code)->update(['occupied'=>0]);
+
         // Auto Delete Recruit
         DB::delete('delete from tb_recruit where platform_id = ?', [$id]);
+
+        // Auto Delete Report Agency
+        DB::delete('delete from tb_report where platform_id = ?', [$id]);
+
+        // Auto Delete Host
+        DB::delete('delete from tb_host where platform_id = ?', [$id]);
 
         DB::delete('delete from tb_platform where id = ?', [$id]);
 

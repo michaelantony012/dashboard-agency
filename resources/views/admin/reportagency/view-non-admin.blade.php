@@ -19,11 +19,7 @@
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('reportagency.index') }}">Report Agency</a></li>
             <li class="breadcrumb-item active">
-                @if (str_contains( auth()->user()->level_access, 'Admin'))
-                Edit Report
-                @else
                 View Report
-                @endif
             </li>
         </ol>
         </div><!-- /.col -->
@@ -38,7 +34,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-            <h3 class="card-title">Fill Data</h3>
+            <h3 class="card-title">Data</h3>
             </div>
             <form method="POST" action="{{ url('/6462/'.$id.'/75727973') }}" enctype="multipart/form-data">
                 @csrf
@@ -53,22 +49,8 @@
                         @enderror
                         <div class="form-group col">
                             <label>Report Periode Type</label>
-                            @if (str_contains( auth()->user()->level_access, 'Admin'))
-                            <select class="form-control select2" style="width: 100%;" name="report_period" id="report_period">
-                                <option value="1" 
-                                    @if ($report_period == 1)
-                                        selected
-                                    @endif
-                                >Weekly</option>
-                                <option value="2" 
-                                @if ($report_period == 2)
-                                    selected
-                                @endif
-                                >Monthly</option>
-                            </select>
-                            @else
                             <input type="text" class="form-control" id="report_period" name="report_period" value="{{ $report_period==1?"Weekly" : "Monthly" }}" readonly>
-                            @endif
+                            
                         </div>
                         @error('agency_id')
                             <div class="text-danger">{{ $message }}</div>
@@ -78,9 +60,7 @@
                         <div class="form-group col">
                             <label for="report_weekmonth">Report Week / Month</label>
                             <input type="number" class="form-control" id="report_weekmonth" placeholder="Report Week / Month" name="report_weekmonth" required value="{{ $report_weekmonth }}" min="1" max="12" 
-                            @if (!str_contains( auth()->user()->level_access, 'Admin'))
-                                readonly
-                            @endif
+                            readonly
                             >
                         </div>
                         @error('report_weekmonth')
@@ -88,16 +68,7 @@
                         @enderror
                         <div class="form-group col">
                             <label>Report Start Date</label>
-                            @if (str_contains( auth()->user()->level_access, 'Admin'))
-                            <div class="input-group date" id="report_startdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#report_startdate" name="report_startdate" required value="{{ $report_startdate }}"/>
-                                <div class="input-group-append" data-target="#report_startdate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                            </div>
-                            @else
                             <input type="text" class="form-control" value="{{ $report_startdate }}" readonly>
-                            @endif
                         </div>
                         @error('report_startdate')
                             <div class="text-danger">{{ $message }}</div>
@@ -105,68 +76,16 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
-                            <label>Report End Date</label>
-                            @if (str_contains( auth()->user()->level_access, 'Admin'))
-                            <div class="input-group date" id="report_enddate" data-target-input="nearest">
-                                <input type="text" id="1234" class="form-control datetimepicker-input" data-target="#report_enddate" name="report_enddate" required value="{{ $report_enddate }}"/>
-                                <div class="input-group-append" data-target="#report_enddate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                            </div>
-                            @else
-                            <input type="text" class="form-control" value="{{ $report_enddate }}" readonly>
-                            @endif
+                            <label>Report End Date</label><input type="text" class="form-control" value="{{ $report_enddate }}" readonly>
+                            
                         </div>
                         @error('report_enddate')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                        @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <div class="form-group col">
-                            <label>Agency</label>
-                            <select class="form-control select2" style="width: 100%;" name="agency_id">
-                                <option></option>
-                                @foreach($agency as $agent)
-                                    <option value="{{ $agent['id'] }}" 
-                                        @if ($agency_id == $agent['id'])
-                                            selected
-                                        @endif
-                                    >{{ $agent['agency_name'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('agency_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        @endif
-                    </div>
-                    <div class="row">
-                        <div class="form-group col">
-                            <label for="percentage_share">Percentage Share</label>
-                            <input type="number" class="form-control" id="percentage_share" placeholder="Percentage Share" name="percentage_share" step=".01" required value="{{ $percentage_share }}"
-                            @if (!str_contains( auth()->user()->level_access, 'Admin'))
-                                readonly
-                            @endif
-                            >
-                        </div>
-                        @error('percentage_share')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div class="form-group col">
-                            <label>Select Platform</label>
-                            @if (str_contains( auth()->user()->level_access, 'Admin'))
-                            <select class="form-control select2" style="width: 100%;" name="platform_id">
-                                @foreach($platform as $plat)
-                                    <option></option>
-                                    <option value="{{ $plat['id'] }}"
-                                    @if ($platform_id == $plat['id'])
-                                        selected
-                                    @endif
-                                    >{{ $plat['platform_name'] }}</option>
-                                @endforeach
-                            </select>
-                            @else
+                            <label>Platform</label>
                             <input type="text" class="form-control" id="platform_id" name="platform_id" value="{{ $platform_name }}" readonly>
-                            @endif
+                            
                         </div>
                         @error('platform_id')
                             <div class="text-danger">{{ $message }}</div>
@@ -174,36 +93,28 @@
                     </div>
                     <div class="row">
                         <div class="form-group col">
+                            <label for="percentage_share">Percentage Share</label>
+                            <input type="number" class="form-control" id="percentage_share" placeholder="Percentage Share" name="percentage_share" step=".01" required value="{{ $percentage_share }}"
+                            readonly
+                            >
+                        </div>
+                        @error('percentage_share')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-group col">
                             <label for="total_paidhost">Total Paid Host</label>
                             <input type="text" class="form-control" id="total_paidhost" placeholder="Total Paid Host" name="total_paidhost" step=".01" readonly value="{{ number_format($total_paidhost) }}">
-                        </div>
-                        <div class="form-group col">
-                            <label for="total_salary">Total Salary</label>
-                            <input type="text" class="form-control" id="total_salary" placeholder="Total Salary" name="total_salary" readonly value="{{ $total_salary }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col">
+                            <label for="total_salary">Total Salary</label>
+                            <input type="text" class="form-control" id="total_salary" placeholder="Total Salary" name="total_salary" readonly value="{{ $total_salary }}">
+                        </div>
+                        <div class="form-group col">
                             <label for="total_share">Total Share</label>
                             <input type="text" class="form-control" id="total_share" placeholder="Total Share" name="total_share" readonly value="{{ $total_share }}">
                         </div>
-                        @if (str_contains( auth()->user()->level_access, 'Admin'))
-                        <div class="form-group col">
-                            <label for="upload_detail">File input</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" name="upload_detail" class="custom-file-input" id="upload_detail">
-                                    <label class="custom-file-label" for="upload_detail">Choose file</label>
-                                </div>
-                                <button type="button" class="btn btn-link" onclick="window.location='{{ url('/6462/'.$id.'/75727977/') }}'">
-                                    Template
-                                </button>
-                                {{-- <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div> --}}
-                            </div>
-                        </div>
-                        @endif
                     </div>
                     {{-- <div class="form-group">
                     <label for="exampleInputFile">File input</label>

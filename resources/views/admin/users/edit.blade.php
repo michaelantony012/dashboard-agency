@@ -27,7 +27,7 @@
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-header">
-            <h3 class="card-title">Quick Example</h3>
+            {{-- <h3 class="card-title">Quick Example</h3> --}}
             </div>
             <form method="POST" action="{{ url('/6462/'.$id.'/75726973') }}">
                 @csrf
@@ -51,7 +51,7 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="exampleInputPassword1">New Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="New password" name="password" required>
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Fill new password if you want to change it" name="password">
                         </div>
                         @error('password')
                             <div class="text-danger">{{ $message }}</div>

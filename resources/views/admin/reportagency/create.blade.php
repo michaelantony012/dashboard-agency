@@ -29,13 +29,18 @@
             <div class="card-header">
             <h3 class="card-title">Fill Data</h3>
             </div>
+            @if(session('alert'))
+                <div class="alert alert-danger">
+                    {{ session('alert') }}
+                </div>
+            @endif
             <form method="POST" action="{{ route('reportagency.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col">
                             <label for="report_period">Report Period Type</label>
-                            <select class="form-control select2" style="width: 100%;" name="report_period" required id="report_period">
+                            <select class="form-control select2" style="width: 100%;" name="report_period" required id="report_period" value="{{ old('report_period') }}">
                                 <option value="1">Weekly</option>
                                 <option value="2">Monthly</option>
                             </select>
@@ -45,7 +50,7 @@
                         @enderror
                         <div class="form-group col">
                             <label for="report_weekmonth">Report Week / Month</label>
-                            <input type="number" class="form-control" id="report_weekmonth" placeholder="Report Week / Month" name="report_weekmonth" required min="1" max="12">
+                            <input type="number" class="form-control" id="report_weekmonth" placeholder="Report Week / Month" name="report_weekmonth" required min="1" max="12" value="{{ old('report_weekmonth') }}">
                         </div>
                         @error('report_weekmonth')
                             <div class="text-danger">{{ $message }}</div>
@@ -55,7 +60,7 @@
                         <div class="form-group col">
                             <label>Report Start Date</label>
                             <div class="input-group date" id="report_startdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#report_startdate" name="report_startdate" required/>
+                                <input type="text" class="form-control datetimepicker-input" data-target="#report_startdate" name="report_startdate" required value="{{ old('report_startdate') }}"/>
                                 <div class="input-group-append" data-target="#report_startdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -67,7 +72,7 @@
                         <div class="form-group col">
                             <label>Report End Date</label>
                             <div class="input-group date" id="report_enddate" data-target-input="nearest">
-                                <input type="text" id="1234" class="form-control datetimepicker-input" data-target="#report_enddate" name="report_enddate" required/>
+                                <input type="text" id="1234" class="form-control datetimepicker-input" data-target="#report_enddate" name="report_enddate" required value="{{ old('report_enddate') }}"/>
                                 <div class="input-group-append" data-target="#report_enddate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -83,7 +88,7 @@
                             <select class="form-control select2" style="width: 100%;" name="agency_id" required>
                                 <option></option>
                                 @foreach($agency as $agent)
-                                    <option value="{{ $agent['id'] }}">{{ $agent['agency_name'] }}</option>
+                                    <option {{ old('agency_id')==$agent['id']?"selected":"" }} value="{{ $agent['id'] }}">{{ $agent['agency_name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -95,7 +100,7 @@
                             <select class="form-control select2" style="width: 100%;" name="platform_id" required>
                                 @foreach($platform as $plat)
                                     <option></option>
-                                    <option value="{{ $plat['id'] }}">{{ $plat['platform_name'] }}</option>
+                                    <option {{ old('platform_id')==$plat['id']?"selected":"" }} value="{{ $plat['id'] }}">{{ $plat['platform_name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -106,23 +111,20 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="percentage_share">Percentage Share</label>
-                            <input type="number" class="form-control" id="percentage_share" placeholder="Percentage Share" name="percentage_share" step=".01" required>
+                            <input type="number" class="form-control" id="percentage_share" placeholder="Percentage Share" name="percentage_share" step=".01" required value="{{ old('percentage_share') }}">
                         </div>
                         @error('percentage_share')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                        <div class="form-group col">
+                        {{-- <div class="form-group col">
                             <label for="upload_detail">File input</label>
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" name="upload_detail" class="custom-file-input" id="upload_detail">
                                     <label class="custom-file-label" for="upload_detail">Choose file</label>
                                 </div>
-                                {{-- <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div> --}}
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- <div class="form-group">
                     <label for="exampleInputFile">File input</label>
@@ -173,6 +175,27 @@ $(function () {
         defaultDate: dateLater
     });
 
+    $('#report_startdate').on('change.datetimepicker', function(e) {
+        // const startDate = parseDate($('input[name="report_startdate"]').val());
+        // const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000); // Adding 6 days in milliseconds
+        // const endDateFormatted = endDate.format('DD/MM/YYYY'); // Format the date as needed
+
+        const startDate = moment(e.date);
+        const endDate = startDate.clone().add(6, 'days');
+
+        // Format the date as YYYY-MM-DD for the input field
+        const endDateFormatted = endDate.format('DD/MM/YYYY');
+        // alert(endDateFormatted);
+
+        // Set the date using the datetimepicker API
+        // $('#report_enddate').datetimepicker('date', endDateFormatted);
+
+        // alert($(this).val() + "    "+startDate + "   " + endDate + "    " + endDateFormatted)
+        $('input[name="report_enddate"]').val(endDateFormatted);
+
+        updateReportFields();
+    });
+
     // // Function to parse the date in the format "YYYY-MM-DD" to a Date object
     // function parseDate(dateString) {
     //     return moment(dateString, 'YYYY-MM-DD').toDate();
@@ -213,7 +236,8 @@ $(function () {
                     const dateOfEndDate = endDate.getDate();
                     if(monthOfStartDate == monthOfEndDate)
                     {
-                        weekOfMonth = Math.ceil(dateOfStartDate/7);
+                        // weekOfMonth = Math.ceil(dateOfStartDate/7);
+                        weekOfMonth = Math.ceil(dateOfEndDate/7);
                     }
                     else
                     {
@@ -237,7 +261,8 @@ $(function () {
 
         // Trigger the updateReportFields function when the start or end date changes
         // Trigger the updateReportFields function when the datepicker is hidden
-        $('#report_startdate, #report_enddate').on('change.datetimepicker', function() {
+        $('#report_enddate').on('change.datetimepicker', function() {
+        // $('#report_startdate, #report_enddate').on('change.datetimepicker', function() {
             // alert('a');
             updateReportFields();
         });

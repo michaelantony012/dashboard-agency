@@ -56,7 +56,7 @@
                     <tbody>
                         @foreach($data['data_modal'] as $item)
                             <tr>
-                                <td>{{$item['id']}}</td>
+                                <td>{{$item['platform_code']}}</td>
                                 <td>{{$item['platform_name']}}</td>
                                 {{-- <td>{{$item['platform_status']}}</td> --}}
                                 <td>{{$item['total_agency']}}</td>
