@@ -110,8 +110,8 @@ class ReportAgencyController extends Controller
             'platform' => $platform,
             'extraction' => $extraction_array,
             'total_paidhost' => number_format($modal->total_paidhost,0),
-            'total_salary' => number_format($modal->total_salary,2),
-            'total_share' => number_format($modal->total_share,2)
+            'total_salary' => '$ ' . number_format($modal->total_salary,2),
+            'total_share' => '$ ' . number_format($modal->total_share,2)
         ];
         return view('admin.reportagency.edit', $data);
     }
@@ -162,8 +162,8 @@ class ReportAgencyController extends Controller
             'platform' => $platform,
             'extraction' => $extraction_array,
             'total_paidhost' => number_format($modal->total_paidhost,0),
-            'total_salary' => number_format($modal->total_salary,2),
-            'total_share' => number_format($modal->total_share,2)
+            'total_salary' => '$ ' . number_format($modal->total_salary,2),
+            'total_share' => '$ ' . number_format($modal->total_share,2)
         ];
         return view('admin.reportagency.view-non-admin', $data);
     }
@@ -223,7 +223,7 @@ class ReportAgencyController extends Controller
         }
         if($sum_salary>0)
         {
-            ReportAgency::where('id', $id)->update(['total_salary' => $sum_salary, 'total_share' => ($sum_salary * ($report_agency->percentage_share/100))]);
+            ReportAgency::where('id', $id)->update(['total_salary' => $sum_salary, 'total_share' => round(($sum_salary * ($report_agency->percentage_share/100)),2)]);
         }
 
         return redirect()->route('reportagency.edit', [$report->id])->with('success', 'Successfully Update Data');

@@ -40,7 +40,9 @@
                     <div class="row">
                         <div class="form-group col">
                             <label for="host_uid">Host UID</label>
-                            <input type="text" class="form-control" id="host_uid" placeholder="Host UID" name="host_uid" required value="{{ old('host_uid',$host_uid) }}">
+                            <input type="text" class="form-control" id="host_uid" placeholder="Host UID" name="host_uid" required value="{{ old('host_uid',$host_uid) }}"
+                            readonly
+                            >
                         </div>
                         @error('host_uid')
                             <div class="text-danger">{{ $message }}</div>

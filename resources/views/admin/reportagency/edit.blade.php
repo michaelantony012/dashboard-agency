@@ -253,7 +253,7 @@
                         <td>{{ $ext['agency_found_status'] }}</td> --}}
                         <td>{{ $ext['host_uid'] }}</td>
                         {{-- <td>{{ $ext['host_found_status'] }}</td> --}}
-                        <td>{{ number_format($ext['total_salary'],2) }}</td>
+                        <td>{{ '$ ' . number_format($ext['total_salary'],2) }}</td>
                     </tr>
                     @endforeach
                         
