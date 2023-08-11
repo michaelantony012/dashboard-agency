@@ -262,7 +262,7 @@ class ReportAgencyController extends Controller
         // dd($agency->id);
         // dd("0".$request->report_week);
         // dd(substr("0".$request->report_week, -2));
-        $report_code = substr("0".$request->report_enddate, 9,2).substr("0".$request->report_enddate, 4,2).(string)($request->report_period==1?"W":"M").substr("0".$request->report_weekmonth, -2).'/'.$platform->id.'/'.$agency->id;
+        $report_code = substr("0".$request->report_enddate, 9,2).substr("0".$request->report_enddate, 4,2).(string)($request->report_period==1?"W":"M").substr("0".$request->report_weekmonth, -2).'/'.$platform->platform_code.'/'.$agency->agency_code;
         // dd($report_code);
 
         // check if report exist
