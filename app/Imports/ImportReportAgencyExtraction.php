@@ -38,7 +38,7 @@ class ImportReportAgencyExtraction implements ToModel, WithStartRow, WithCalcula
     public function rules(): array
     {
         return [
-            '1' => 'required|string',
+            '1' => 'required|numeric',
             '2' => 'required|numeric',
         ];
     }
@@ -56,6 +56,15 @@ class ImportReportAgencyExtraction implements ToModel, WithStartRow, WithCalcula
         // dd($row[4]);
 
         $host = Host::where('host_uid', $row[1])->first();
+
+        // dd(json_encode([
+        //     'report_id' => $this->report_id,
+        //     'report_order' => $row[0],
+        //     'report_code' => $this->report_code,
+        //     'host_id' => $host?$host['id']:null,
+        //     'host_uid' => $row[1],
+        //     'total_salary' => $row[2],
+        // ]));
         /**
          * Platform dan Agency Mengikuti header
          */
