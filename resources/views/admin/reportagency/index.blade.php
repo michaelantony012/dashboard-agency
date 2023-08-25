@@ -56,7 +56,7 @@
                         <th style="width: 30px">Agency</th>
                         @endif
                         <th style="width: 30px">Platform</th>
-                        <th>Actions</th>
+                        <th data-priority="1">Actions</th>
                     </tr>
                     </thead>
                     <tbody>

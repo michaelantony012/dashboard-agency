@@ -58,7 +58,7 @@
                         @if (str_contains( auth()->user()->level_access, 'Admin'))
                         <th class="filter">Agency Name</th>
                         @endif
-                        <th></th>
+                        <th data-priority="1"></th>
                     </tr>
                     </thead>
                     <tbody>

@@ -53,7 +53,7 @@
                         <th>Total Platform</th>
                         <th>Total Host</th>
                         @if (str_contains( auth()->user()->level_access, 'Admin'))
-                        <th>Actions</th>
+                        <th data-priority="1">Actions</th>
                         @endif
                     </tr>
                     </thead>

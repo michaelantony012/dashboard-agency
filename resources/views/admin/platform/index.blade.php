@@ -50,7 +50,7 @@
                         <th>Total Agency</th>
                         <th>Total Host</th>
                         <th style="width: 100px;">Platform Status</th>
-                        <th>Actions</th>
+                        <th data-priority="1">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
